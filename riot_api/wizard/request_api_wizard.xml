@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+        <record model="ir.ui.view" id="request_api_view">
+            <field name="name">request.api.view</field>
+            <field name="model">request.api</field>
+            <field name="arch" type="xml">
+            	<form string="Request API Wizardi">
+            	    <group>
+	            		<group>
+							<field name="summoner_name"/>
+						</group>
+	            	    <group>
+	            	    	<field name="region"/>
+	        	    	</group>
+        	    	</group>
+        	    	<button string="Compute" name="call_api_request" type="object" class="oe_highlight"/>
+        	    	<label for="api_return"/>
+					<field name="api_return"/>        	    	
+		            <footer>
+		                <button string="Validate" name="call_api_request" type="object" class="oe_highlight"/>
+		                or
+		                <button string="Cancel" class="oe_link" special="cancel"/>
+		            </footer>
+	            </form>
+            </field>
+        </record>
+        
+		<record id="action_request_api" model="ir.actions.act_window">
+			<field name="name">Request API Wizard</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">request.api</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+		
+        <act_window id="action_request_api_wizard"
+            name="Request API"
+            src_model="res.partner"
+            res_model="request.api"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"/>
+	</data>
+</openerp>
+
+        
+                            

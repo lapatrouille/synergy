@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">         
+    	<record id="menu_summoner" model="website.menu">
+            <field name="name">Summoner</field>
+            <field name="url">/page/synergy_website_summoner.summoner</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">60</field>
+        </record>
+    </data>
+</openerp>
