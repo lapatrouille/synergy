@@ -6,17 +6,6 @@
 		      <div id="wrap">
 		        <div class="oe_structure"/>
 		        <div class="container">
-		            <!--<h1>Summoner</h1>
-		            <div class="row">
-		                <div class="col-md-8">
-		                    <div class="oe_structure">
-		                        <div>
-		                            <p>Try the beta of lol.synergy.gg!</p>
-		                            <p>We'll do our best to get back to you as soon as possible.</p>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>-->
 		            <form action="/summoner/update" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
         	            <div class="row">
         	            	<div class="col-xs-2">
@@ -71,7 +60,7 @@
 							    <tr t-foreach="matches" t-as="match">
 							        <td><img class="img img-responsive img-circle" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_icon_name')}.png" width="60"/></td>
 							        <td><br/><span t-esc="match.get('champion_name')"/></td>
-							        <td><span t-esc="match.get('kills')"/> / <span t-esc="match.get('deaths')"/> / <span t-esc="match.get('assists')"/><br/><br/><strong><span t-esc="match.get('kda')"/></strong></td>
+							        <td><br/><span t-esc="match.get('kills')"/> / <span t-esc="match.get('deaths')"/> / <span t-esc="match.get('assists')"/><br/><strong><span t-esc="match.get('kda')"/></strong></td>
 							        <td><br/><span t-esc="match.get('official_role')"/></td>
 							        <td>
 							        	<img t-if="match.get('loose')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/loose.jpg" width="60" height="60" alt="Loose"/>
@@ -109,27 +98,26 @@
 						</div>
 						<div class="col-xs-4 col-xs-offset-1">
 							<h1>Best Bros</h1>
-							<table class="table table-condensed">
+							<table class="table table-condensed" t-if="bro_participants">
 							  <thead>
 							    <tr>
 							    	<th><strong>Logo</strong></th>
 							        <th><strong>Name</strong></th>
+							        <th><strong>Played</strong></th>
 							        <th><strong>Win</strong></th>
 							        <th><strong>Loose</strong></th>
 							        <th><strong>Win Rate</strong></th>
 							    </tr>
 							  </thead>
 							  <tbody>
-							    <!--<tr t-foreach="matches" t-as="match">
-							        <td><img class="img img-responsive img-circle" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_icon_name')}.png" width="60"/></td>
-							        <td><br/><span t-esc="match.get('champion_name')"/></td>
-							        <td><br/><span t-esc="match.get('kills')"/> / <span t-esc="match.get('deaths')"/> / <span t-esc="match.get('assists')"/> - <span t-esc="match.get('kda')"/></td>
-							        <td><br/><span t-esc="match.get('official_role')"/></td>
-							        <td>
-							        	<img t-if="match.get('loose')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/loose.jpg" width="60" height="60" alt="Loose"/>
-							        	<img t-if="match.get('win')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/win.jpg" width="60" height="60" alt="Win"/>
-							    	</td>
-							    </tr>-->
+							    <tr t-foreach="bro_participants" t-as="bro">
+							        <td><img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{bro.get('profil_icon')}.png" width="60"/></td>
+							        <td><br/><span t-esc="bro.get('name')"/></td>
+							        <td><br/><span t-esc="bro.get('value')"/></td>
+							        <td><br/><span t-esc="bro.get('official_role')"/></td>
+							        <td><br/><span t-esc="bro.get('official_role')"/></td>
+							        <td><br/><span t-esc="bro.get('official_role')"/></td>
+							    </tr>
 							  </tbody>
 							</table>
 						</div>
