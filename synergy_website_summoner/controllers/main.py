@@ -79,7 +79,7 @@ class summoner(http.Controller):
             match_id = match['matchId']
             match_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/" + str(match_id) + "?api_key=" + key
             result_match = urllib2.urlopen(match_url).read()
-            time.sleep(0.5)
+            time.sleep(1)
             result_match = json.loads(result_match)
             participant_identities = result_match['participantIdentities']
             for participant_identity in participant_identities:
