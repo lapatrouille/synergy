@@ -39,12 +39,12 @@
 								<br/>			                	
 			                	<button class="btn btn-primary btn-lg">Update</button>
 		                	</div>
-		                	<div class="col-xs-2">
+		                	<div class="col-xs-2" t-if="profileIconId">
 			                    <div class="oe_structure">
 			                    	<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{profileIconId}.png"/>
 		                    	</div>
 	                    	</div>
-	                    	<div class="col-xs-5col-xs-offset-1">
+	                    	<div class="col-xs-5col-xs-offset-1" t-if="name">
 	                    		<div class="oe_structure">
 		                            <h3><span t-esc="name"/></h3>
 			                        Level <span t-esc="summonerLevel"/> / Server <span t-esc="summoner_region"/><br/>
