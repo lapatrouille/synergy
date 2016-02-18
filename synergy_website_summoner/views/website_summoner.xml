@@ -166,5 +166,42 @@
 		        </div>
 		    </xpath>
 		</template>
+		
+		<template id="homepage" inherit_id="website.homepage" name="Footer Copyright">
+		    <xpath expr="//div" position="inside">
+		    	<div class="oe_structure"/>
+		        <div class="container">
+		        	<form action="/summoner/update" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+		            	<section data-snippet-id='three-columns'>
+			                <div class="container">
+			                    <div class="row">
+			                        <div class="col-md-3">
+			                        </div>
+			                        <div class="col-md-4">
+			                        	<div class="col-md-6">
+						                	<label class="control-label" for="summoner_name">Summoner Name :</label>
+						                    <input type="text" class="form-control" name="summoner_name" placeholder="Threshy McGraby" t-attf-value="#{summoner_name or ''}"/>
+			                        	</div>
+			                        	<div class="col-md-5">
+						                	<label class="control-label" for="summoner_region">Region :</label>
+						                    <select class="form-control" name="summoner_region" t-attf-value="#{summoner_region or ''}">
+												<option value="euw">EUW</option>
+												<option value="eune">EUNE</option>
+												<option value="na">NA</option>
+												<option value="kr">KR</option>
+											</select>
+										</div>
+			                        </div>
+			                        <div class="col-md-2">
+										<br/>			                	
+					                	<button class="btn btn-primary btn-lg">Update</button>
+			                        </div>
+			                    </div>
+			                </div>
+			            </section>
+                    </form>
+                </div>
+		    </xpath>
+		</template>
 	</data>
 </openerp>
