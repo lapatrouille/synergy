@@ -30,6 +30,7 @@ summoner_fields = [
     'loose',
     'win_rate',
     'bro_participants',
+    'champions',
     ]
 
 def urlEncodeNonAscii(b):
@@ -50,7 +51,7 @@ class summoner(http.Controller):
         url = iriToUri(url)
         result = urllib2.urlopen(url).read()
         result = json.loads(result)
-        kwargs = result[name]
+        kwargs = result[name.lower()]
         kwargs['summoner_name'] = name
         kwargs['summoner_region'] = region
         return kwargs
@@ -59,8 +60,8 @@ class summoner(http.Controller):
         matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  str(kwargs['id']) + "?api_key=" + key + "&rankedQueues=TEAM_BUILDER_DRAFT_RANKED_5x5"
         result_matches = urllib2.urlopen(matches_url).read()
         result_matches = json.loads(result_matches)
-#         kwargs['matches'] = result_matches['matches'][:5]
-        kwargs['matches'] = result_matches['matches']
+        kwargs['matches'] = result_matches['matches'][:20]
+#         kwargs['matches'] = result_matches['matches']
         return kwargs
     
     def get_champion_details(self, kwargs, region):
@@ -68,8 +69,18 @@ class summoner(http.Controller):
         result_champion = urllib2.urlopen(champion_list_by_id_url).read()
         result_champion = json.loads(result_champion)
         champion_dict = result_champion['data']
+        champions = {}
         for match in kwargs['matches']:
             champion_id = match['champion']
+            if champions.get(champion_id):
+                champions[champion_id]['games'] += 1
+            else:
+                champions[champion_id] = {}
+                champions[champion_id]['champion_name'] = champion_dict[str(champion_id)]['name']
+                champions[champion_id]['champion_icon_name'] = champion_dict[str(champion_id)]['key']
+                champions[champion_id]['games'] = 1
+                champions[champion_id]['loose'] = 0
+                champions[champion_id]['win'] = 0
             match['champion_name'] = champion_dict[str(champion_id)]['name']
             match['champion_icon_name'] = champion_dict[str(champion_id)]['key']
             if match['lane'] == 'MID':
@@ -85,6 +96,7 @@ class summoner(http.Controller):
                 elif match['role'] == 'DUO_CARRY':
                     official_role = 'ADC'
             match['official_role'] = official_role
+        kwargs['champions'] = champions
         return kwargs
 
     def get_match_details(self, kwargs, region):
@@ -122,15 +134,17 @@ class summoner(http.Controller):
                     if int(match['deaths']) == 0:
                         match['kda'] = "Perfect"
                     else:  
-                        match['kda'] = str((float(match['kills']) + float(match['assists'])) / float(match['deaths']))
+                        match['kda'] = float("{0:.2f}".format((float(match['kills']) + float(match['assists'])) / float(match['deaths'])))
                     if stats['winner'] == True:
                         match['win'] = True
                         kwargs['win'] += 1
+                        kwargs['champions'][match['champion']]['win'] += 1
                     else:
                         match['loose'] = True
                         kwargs['loose'] += 1
+                        kwargs['champions'][match['champion']]['loose'] += 1
         win_rate = float(kwargs['win']) / (float(kwargs['loose']) + float(kwargs['win']))
-        kwargs['win_rate'] = win_rate * 100
+        kwargs['win_rate'] = float("{0:.2f}".format(win_rate * 100))
         kwargs['bro_participants_prep'] = bro_participants
         return kwargs 
     
@@ -148,6 +162,22 @@ class summoner(http.Controller):
             kwargs['bro_participants'].append(bro)
         return kwargs
     
+    def get_best_champions(self, kwargs):
+        champions = kwargs['champions']
+        dict = {}
+        for champion in champions:
+            dict[champion] = champions[champion]['games']
+        sorted_dict = sorted(dict.items(), key=operator.itemgetter(1), reverse=True)
+        kwargs['champions'] = []
+        for element in sorted_dict[:5]:
+            champion_id = element[0]
+            champ = champions[champion_id]
+            win_rate = float(champ['win']) / (float(champ['loose']) + float(champ['win']))
+            champ['win_rate'] = float("{0:.2f}".format(win_rate * 100))
+            kwargs['champions'].append(champ)
+        print kwargs['champions']
+        return kwargs
+    
     @http.route(['/page/synergy_website_summoner.summoner', '/summoner/update'], type='http', auth="public", website=True)
     def summoner(self, **kwargs):
         values = {}
@@ -159,6 +189,7 @@ class summoner(http.Controller):
             kwargs = self.get_champion_details(kwargs, region)
             kwargs = self.get_match_details(kwargs, region)
             kwargs = self.get_best_bros(kwargs)
+            kwargs = self.get_best_champions(kwargs)
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)

@@ -8,7 +8,7 @@
 		        <div class="container">
 		            <form action="/summoner/update" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
         	            <div class="row">
-        	            	<div class="col-xs-2">
+        	            	<div class="col-xs-2 col-xs-offset-3">
         	            		<br/>
 			                	<label class="control-label" for="summoner_name">Summoner Name :</label>
 			                    <input type="text" class="form-control" name="summoner_name" placeholder="Threshy McGraby" t-attf-value="#{summoner_name or ''}"/>
@@ -28,100 +28,100 @@
 								<br/>			                	
 			                	<button class="btn btn-primary btn-lg">Update</button>
 		                	</div>
-		                	<div class="col-xs-2" t-if="profileIconId">
-			                    <div class="oe_structure">
-			                    	<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{profileIconId}.png"/>
-		                    	</div>
-	                    	</div>
-	                    	<div class="col-xs-5col-xs-offset-1" t-if="name">
-	                    		<div class="oe_structure">
-		                            <h3><span t-esc="name"/></h3>
-			                        Level <span t-esc="summonerLevel"/> / Server <span t-esc="summoner_region"/><br/>
-			                        Last Update: <span t-esc="revisionDate"/> / Id: <span t-esc="id"/><br/>
-									Win: <span t-esc="win"/> / Loose: <span t-esc="loose"/> | Winrate (%): <span t-esc="win_rate"/>	                        
-			                    </div>
-			                </div>
+		                	
 			            </div>
                     </form>
-		            <div class="row" t-if="matches">
-		            	<div class="col-xs-5">
-						<h1>Matches</h1>
-							<table class="table table-condensed">
-							  <thead>
-							    <tr>
-							    	<th><strong>Champion</strong></th>
-							        <th><strong></strong></th>
-							        <th><strong>KDA</strong></th>
-							        <th><strong>Role</strong></th>
-							        <th><strong>Result</strong></th>
-							    </tr>
-							  </thead>
-							  <tbody>
-							    <tr t-foreach="matches" t-as="match">
-							        <td><img class="img img-responsive img-circle" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_icon_name')}.png" width="60"/></td>
-							        <td><br/><span t-esc="match.get('champion_name')"/></td>
-							        <td><br/><span t-esc="match.get('kills')"/> / <span t-esc="match.get('deaths')"/> / <span t-esc="match.get('assists')"/><br/><strong><span t-esc="match.get('kda')"/></strong></td>
-							        <td><br/><span t-esc="match.get('official_role')"/></td>
-							        <td>
-							        	<img t-if="match.get('loose')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/loose.jpg" width="60" height="60" alt="Loose"/>
-							        	<img t-if="match.get('win')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/win.jpg" width="60" height="60" alt="Win"/>
-							    	</td>
-							    </tr>
-							  </tbody>
-							</table>
-						</div>
-						<div class="col-xs-4 col-xs-offset-1">
-							<h1>Best Champions</h1>
-							<table class="table table-condensed">
-							  <thead>
-							    <tr>
-							    	<th><strong>Logo</strong></th>
-							        <th><strong>Name</strong></th>
-							        <th><strong>Win</strong></th>
-							        <th><strong>Loose</strong></th>
-							        <th><strong>Win Rate</strong></th>
-							    </tr>
-							  </thead>
-							  <tbody>
-							    <!--<tr t-foreach="matches" t-as="match">
-							        <td><img class="img img-responsive img-circle" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_icon_name')}.png" width="60"/></td>
-							        <td><br/><span t-esc="match.get('champion_name')"/></td>
-							        <td><br/><span t-esc="match.get('kills')"/> / <span t-esc="match.get('deaths')"/> / <span t-esc="match.get('assists')"/> - <span t-esc="match.get('kda')"/></td>
-							        <td><br/><span t-esc="match.get('official_role')"/></td>
-							        <td>
-							        	<img t-if="match.get('loose')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/loose.jpg" width="60" height="60" alt="Loose"/>
-							        	<img t-if="match.get('win')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/win.jpg" width="60" height="60" alt="Win"/>
-							    	</td>
-							    </tr>-->
-							  </tbody>
-							</table>
-						</div>
-						<div class="col-xs-4 col-xs-offset-1">
-							<h1>Best Bros</h1>
-							<table class="table table-condensed" t-if="bro_participants">
-							  <thead>
-							    <tr>
-							    	<th><strong>Logo</strong></th>
-							        <th><strong>Name</strong></th>
-							        <th><strong>Played</strong></th>
-							        <th><strong>Win</strong></th>
-							        <th><strong>Loose</strong></th>
-							        <th><strong>Win Rate</strong></th>
-							    </tr>
-							  </thead>
-							  <tbody>
-							    <tr t-foreach="bro_participants" t-as="bro">
-							        <td><img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{bro.get('profil_icon')}.png" width="60"/></td>
-							        <td><br/><span t-esc="bro.get('name')"/></td>
-							        <td><br/><span t-esc="bro.get('value')"/></td>
-							        <td><br/><span t-esc="bro.get('official_role')"/></td>
-							        <td><br/><span t-esc="bro.get('official_role')"/></td>
-							        <td><br/><span t-esc="bro.get('official_role')"/></td>
-							    </tr>
-							  </tbody>
-							</table>
-						</div>
-					</div>
+                    <section data-snippet-id='three-columns'>
+		                <div class="container">
+		                    <div class="row">
+		                    	<div class="col-md-2" t-if="name">
+		                    		<h1>Details</h1>
+			                    	<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{profileIconId}.png" t-if="profileIconId"/><br/>
+		                            <h3><span t-esc="name"/></h3><br/>
+			                        <strong>Level</strong> <span t-esc="summonerLevel"/> / <strong>Server</strong> <span t-esc="summoner_region"/><br/>
+			                        <strong>Last Update:</strong> <span t-esc="revisionDate"/><br/>
+			                        <strong>Id:</strong> <span t-esc="id"/><br/>
+									<strong>Win:</strong> <span t-esc="win"/> / <strong>Loose:</strong> <span t-esc="loose"/><br/>
+									<strong>Winrate (%):</strong> <span t-esc="win_rate"/>	                        
+		                        </div>
+		                        <div class="col-md-5" t-if="matches">
+		                            <h1>Matches</h1>
+									<table class="table table-condensed">
+									  <thead>
+									    <tr>
+									    	<th><strong>Champion</strong></th>
+									        <th><strong></strong></th>
+									        <th><strong>KDA</strong></th>
+									        <th><strong>Role</strong></th>
+									        <th><strong>Result</strong></th>
+									    </tr>
+									  </thead>
+									  <tbody>
+									    <tr t-foreach="matches" t-as="match">
+									        <td><img class="img img-responsive img-circle" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_icon_name')}.png" width="60"/></td>
+									        <td><br/><span t-esc="match.get('champion_name')"/></td>
+									        <td><br/><span t-esc="match.get('kills')"/> / <span t-esc="match.get('deaths')"/> / <span t-esc="match.get('assists')"/><br/><strong><span t-esc="match.get('kda')"/></strong></td>
+									        <td><br/><span t-esc="match.get('official_role')"/></td>
+									        <td>
+									        	<img t-if="match.get('loose')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/loose.jpg" width="60" height="60" alt="Loose"/>
+									        	<img t-if="match.get('win')" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/win.jpg" width="60" height="60" alt="Win"/>
+									    	</td>
+									    </tr>
+									  </tbody>
+									</table>
+		                        </div>
+		                        <div class="col-md-4  col-xs-offset-1" t-if="champions">
+		                            <h1>Best Champions</h1>
+									<table class="table table-condensed" >
+									  <thead>
+									    <tr>
+									    	<th><strong>Logo</strong></th>
+									        <th><strong>Name</strong></th>
+									        <th><strong>Played</strong></th>
+									        <th><strong>Win</strong></th>
+									        <th><strong>Loose</strong></th>
+									        <th><strong>Win Rate</strong></th>
+									    </tr>
+									  </thead>
+									  <tbody>
+									    <tr t-foreach="champions" t-as="champion">
+									        <td><img class="img img-responsive img-circle" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{champion.get('champion_icon_name')}.png" width="60"/></td>
+									        <td><br/><span t-esc="champion.get('champion_name')"/></td>
+									        <td><br/><span t-esc="champion.get('games')"/></td>
+									        <td><br/><span t-esc="champion.get('win')"/></td>
+									        <td><br/><span t-esc="champion.get('loose')"/></td>
+									        <td><br/><span t-esc="champion.get('win_rate')"/></td>
+									    </tr>
+									  </tbody>
+									</table>
+									<br/>
+		                            <h1>Best Bros</h1>
+									<table class="table table-condensed" t-if="bro_participants">
+									  <thead>
+									    <tr>
+									    	<th><strong>Logo</strong></th>
+									        <th><strong>Name</strong></th>
+									        <th><strong>Played</strong></th>
+									        <th><strong>Win</strong></th>
+									        <th><strong>Loose</strong></th>
+									        <th><strong>Win Rate</strong></th>
+									    </tr>
+									  </thead>
+									  <tbody>
+									    <tr t-foreach="bro_participants" t-as="bro">
+									        <td><img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{bro.get('profil_icon')}.png" width="60"/></td>
+									        <td><br/><span t-esc="bro.get('name')"/></td>
+									        <td><br/><span t-esc="bro.get('value')"/></td>
+									        <td><br/><span t-esc="bro.get('official_role')"/></td>
+									        <td><br/><span t-esc="bro.get('official_role')"/></td>
+									        <td><br/><span t-esc="bro.get('official_role')"/></td>
+									    </tr>
+									  </tbody>
+									</table>
+		                        </div>
+		                    </div>
+		                </div>
+		            </section>
 		        </div>
 		        <div class="oe_structure"/>
 		      </div>
