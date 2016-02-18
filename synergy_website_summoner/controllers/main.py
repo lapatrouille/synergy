@@ -31,6 +31,7 @@ summoner_fields = [
     'win_rate',
     'bro_participants',
     'champions',
+    'roles',
     ]
 
 def urlEncodeNonAscii(b):
@@ -70,6 +71,7 @@ class summoner(http.Controller):
         result_champion = json.loads(result_champion)
         champion_dict = result_champion['data']
         champions = {}
+        roles = {}
         for match in kwargs['matches']:
             champion_id = match['champion']
             if champions.get(champion_id):
@@ -96,7 +98,16 @@ class summoner(http.Controller):
                 elif match['role'] == 'DUO_CARRY':
                     official_role = 'ADC'
             match['official_role'] = official_role
+            if roles.get(official_role):
+                roles[official_role]['games'] += 1
+            else:
+                roles[official_role] = {}
+                roles[official_role]['name'] = official_role
+                roles[official_role]['games'] = 1
+                roles[official_role]['loose'] = 0
+                roles[official_role]['win'] = 0
         kwargs['champions'] = champions
+        kwargs['roles'] =roles
         return kwargs
 
     def get_match_details(self, kwargs, region):
@@ -139,10 +150,12 @@ class summoner(http.Controller):
                         match['win'] = True
                         kwargs['win'] += 1
                         kwargs['champions'][match['champion']]['win'] += 1
+                        kwargs['roles'][match['official_role']]['win'] += 1
                     else:
                         match['loose'] = True
                         kwargs['loose'] += 1
                         kwargs['champions'][match['champion']]['loose'] += 1
+                        kwargs['roles'][match['official_role']]['loose'] += 1
         win_rate = float(kwargs['win']) / (float(kwargs['loose']) + float(kwargs['win']))
         kwargs['win_rate'] = float("{0:.2f}".format(win_rate * 100))
         kwargs['bro_participants_prep'] = bro_participants
@@ -175,7 +188,21 @@ class summoner(http.Controller):
             win_rate = float(champ['win']) / (float(champ['loose']) + float(champ['win']))
             champ['win_rate'] = float("{0:.2f}".format(win_rate * 100))
             kwargs['champions'].append(champ)
-        print kwargs['champions']
+        return kwargs
+    
+    def get_roles_details(self, kwargs):
+        roles = kwargs['roles']
+        dict = {}
+        for role in roles:
+            dict[role] = roles[role]['games']
+        sorted_dict = sorted(dict.items(), key=operator.itemgetter(1), reverse=True)
+        kwargs['roles'] = []
+        for element in sorted_dict[:5]:
+            role_id = element[0]
+            rol = roles[role_id]
+            win_rate = float(rol['win']) / (float(rol['loose']) + float(rol['win']))
+            rol['win_rate'] = float("{0:.2f}".format(win_rate * 100))
+            kwargs['roles'].append(rol)
         return kwargs
     
     @http.route(['/page/synergy_website_summoner.summoner', '/summoner/update'], type='http', auth="public", website=True)
@@ -190,6 +217,7 @@ class summoner(http.Controller):
             kwargs = self.get_match_details(kwargs, region)
             kwargs = self.get_best_bros(kwargs)
             kwargs = self.get_best_champions(kwargs)
+            kwargs = self.get_roles_details(kwargs)
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)

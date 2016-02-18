@@ -38,7 +38,7 @@
                     <section data-snippet-id='three-columns'>
 		                <div class="container">
 		                    <div class="row">
-		                    	<div class="col-md-2" t-if="name">
+		                    	<div class="col-md-3" t-if="name">
 		                    		<h1>Details</h1>
 			                    	<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{profileIconId}.png" t-if="profileIconId"/><br/>
 		                            <h3><span t-esc="name"/></h3><br/>
@@ -46,7 +46,28 @@
 			                        <strong>Last Update:</strong> <span t-esc="revisionDate"/><br/>
 			                        <strong>Id:</strong> <span t-esc="id"/><br/>
 									<strong>Win:</strong> <span t-esc="win"/> / <strong>Loose:</strong> <span t-esc="loose"/><br/>
-									<strong>Winrate (%):</strong> <span t-esc="win_rate"/>	                        
+									<strong>Winrate (%):</strong> <span t-esc="win_rate"/><br/>
+									<h1>Best Roles</h1>
+									<table class="table table-condensed" t-if="bro_participants">
+									  <thead>
+									    <tr>
+									        <th><strong>Name</strong></th>
+									        <th><strong>Played</strong></th>
+									        <th><strong>Win</strong></th>
+									        <th><strong>Loose</strong></th>
+									        <th><strong>Win Rate</strong></th>
+									    </tr>
+									  </thead>
+									  <tbody>
+									    <tr t-foreach="roles" t-as="role">
+									        <td><br/><span t-esc="role.get('name')"/></td>
+									        <td><br/><span t-esc="role.get('games')"/></td>
+									        <td><br/><span t-esc="role.get('win')"/></td>
+									        <td><br/><span t-esc="role.get('loose')"/></td>
+									        <td><br/><span t-esc="role.get('win_rate')"/></td>
+									    </tr>
+									  </tbody>
+									</table>                    
 		                        </div>
 		                        <div class="col-md-5" t-if="matches">
 		                            <h1>Matches</h1>
@@ -74,7 +95,7 @@
 									  </tbody>
 									</table>
 		                        </div>
-		                        <div class="col-md-5" t-if="champions">
+		                        <div class="col-md-4" t-if="champions">
 		                            <h1>Best Champions</h1>
 									<table class="table table-condensed" >
 									  <thead>
@@ -130,6 +151,20 @@
 		        <div class="oe_structure"/>
 		      </div>
 		    </t>
+		</template>
+		
+		<template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+		    <xpath expr="//footer" position="inside">
+		        <div class="container mt16 mb8">
+		            <!--<div class="pull-right" t-ignore="true" t-if="not editable">
+		                Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
+		                <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
+		            </div>-->
+		            <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">
+		                Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+		            </div>
+		        </div>
+		    </xpath>
 		</template>
 	</data>
 </openerp>
