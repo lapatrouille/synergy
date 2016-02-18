@@ -7,29 +7,33 @@
 		        <div class="oe_structure"/>
 		        <div class="container">
 		            <form action="/summoner/update" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
-        	            <div class="row">
-        	            	<div class="col-xs-2 col-xs-offset-3">
-        	            		<br/>
-			                	<label class="control-label" for="summoner_name">Summoner Name :</label>
-			                    <input type="text" class="form-control" name="summoner_name" placeholder="Threshy McGraby" t-attf-value="#{summoner_name or ''}"/>
+		            	<section data-snippet-id='three-columns'>
+			                <div class="container">
+			                    <div class="row">
+			                        <div class="col-md-3">
+			                        </div>
+			                        <div class="col-md-4">
+			                        	<div class="col-md-6">
+						                	<label class="control-label" for="summoner_name">Summoner Name :</label>
+						                    <input type="text" class="form-control" name="summoner_name" placeholder="Threshy McGraby" t-attf-value="#{summoner_name or ''}"/>
+			                        	</div>
+			                        	<div class="col-md-5">
+						                	<label class="control-label" for="summoner_region">Region :</label>
+						                    <select class="form-control" name="summoner_region" t-attf-value="#{summoner_region or ''}">
+												<option value="euw">EUW</option>
+												<option value="eune">EUNE</option>
+												<option value="na">NA</option>
+												<option value="kr">KR</option>
+											</select>
+										</div>
+			                        </div>
+			                        <div class="col-md-2">
+										<br/>			                	
+					                	<button class="btn btn-primary btn-lg">Update</button>
+			                        </div>
+			                    </div>
 			                </div>
-        	            	<div class="col-xs-2">
-        	            		<br/>
-			                	<label class="control-label" for="summoner_region">Region :</label>
-			                    <select class="form-control" name="summoner_region" t-attf-value="#{summoner_region or ''}">
-									<option value="euw">EUW</option>
-									<option value="eune">EUNE</option>
-									<option value="na">NA</option>
-									<option value="kr">KR</option>
-								</select>
-			                </div>
-			                <div class="col-xs-2">
-			                	<br/>
-								<br/>			                	
-			                	<button class="btn btn-primary btn-lg">Update</button>
-		                	</div>
-		                	
-			            </div>
+			            </section>
                     </form>
                     <section data-snippet-id='three-columns'>
 		                <div class="container">
@@ -70,7 +74,7 @@
 									  </tbody>
 									</table>
 		                        </div>
-		                        <div class="col-md-4  col-xs-offset-1" t-if="champions">
+		                        <div class="col-md-5" t-if="champions">
 		                            <h1>Best Champions</h1>
 									<table class="table table-condensed" >
 									  <thead>
