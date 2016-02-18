@@ -48,6 +48,7 @@ def iriToUri(iri):
 class summoner(http.Controller):
     
     def get_profile(self, name, region):
+        name = name.replace(' ','')
         url = u"https://" + region + u".api.pvp.net/api/lol/" + region + u"/v1.4/summoner/by-name/" + name + u"?api_key=" + key
         url = iriToUri(url)
         result = urllib2.urlopen(url).read()
@@ -205,7 +206,7 @@ class summoner(http.Controller):
             kwargs['roles'].append(rol)
         return kwargs
     
-    @http.route(['/page/synergy_website_summoner.summoner', '/summoner/update'], type='http', auth="public", website=True)
+    @http.route(['/summoner/update'], type='http', auth="public", website=True)
     def summoner(self, **kwargs):
         values = {}
         if kwargs:
