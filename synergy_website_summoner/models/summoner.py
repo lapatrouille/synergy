@@ -22,6 +22,7 @@ from openerp import models, fields, api, _
 
 class summoner_summoner(models.Model):
     _name = 'summoner.summoner'
+    _inherit = ['mail.thread']
 
     name = fields.Char('Name')
     pro_team_id = fields.Many2one('summoner.pro.team','Pro Team')
@@ -30,16 +31,21 @@ class summoner_summoner(models.Model):
                               ('mid','Mid'),
                               ('adc','AD Carry'),
                               ('support','Support')])
+    summoner_name = fields.Char('Summoner Name')
 
 class summoner_pro_team(models.Model):
     _name = 'summoner.pro.team'
+    _inherit = ['mail.thread']
     
     name = fields.Char('Name')
     pro_championship_id = fields.Many2one('summoner.pro.championship', 'Pro Championship')
+    pro_player_ids = fields.One2many('summoner.summoner','pro_team_id', 'Pro Players')
     
 class summoner_pro_championship(models.Model):
     _name = 'summoner.pro.championship'
+    _inherit = ['mail.thread']
     
     name = fields.Char('Name')
+    pro_team_ids = fields.One2many('summoner.pro.team','pro_championship_id', 'Pro Teams')
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:    
