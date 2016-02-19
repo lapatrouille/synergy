@@ -13,6 +13,7 @@
     'data': [
         'data/data.xml',
         'views/website_summoner.xml',
+        'views/summoner_view.xml'
     ],
     'installable': True,
     'auto_install': False,
