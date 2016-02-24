@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+		<!--PRO PLAYER VIEWS-->
+        <record id="summoner_pro_player_form" model="ir.ui.view">
+            <field name="name">summoner.pro.player.view.form</field>
+            <field name="model">summoner.pro.player</field>
+            <field name="arch" type="xml">
+                <form string="Pro PLayer">
+                    <sheet>
+                       <group>
+	                       <group>
+	                       		<field name="name"/>
+	                       		<field name="role"/>
+	                       </group>
+	                       <group>
+	                       		<field name="pro_team_id"/>
+                       	   </group>
+                       </group>
+                    </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>	
+
+        <record id="summoner_pro_player_tree" model="ir.ui.view">
+            <field name="name">summoner.pro.player.view.tree</field>
+            <field name="model">summoner.pro.player</field>
+            <field name="arch" type="xml">
+                <tree string="Pro PLayers">
+                    <field name="name"/>
+                    <field name="role"/>
+                    <field name="pro_team_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="summoner_pro_player_search" model="ir.ui.view">
+            <field name="name">summoner.pro.player.view.search</field>
+            <field name="model">summoner.pro.player</field>
+            <field name="arch" type="xml">
+                <search string="Pro PLayers">
+                    <field name="name"/>
+                    <field name="role"/>
+                    <field name="pro_team_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="summoner_pro_player_action_form" model="ir.actions.act_window">
+            <field name="name">Pro Players</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">summoner.pro.player</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="summoner_summoner_search"/>
+            <field name="view_id" ref="summoner_summoner_tree"/>
+        </record>
+
+        <!-- PRO TEAM VIEWS -->
+        <record id="summoner_pro_team_form" model="ir.ui.view">
+            <field name="name">summoner.pro.team.view.form</field>
+            <field name="model">summoner.pro.team</field>
+            <field name="arch" type="xml">
+                <form string="Pro Team">
+                    <sheet>
+                       <group>
+	                       <group>
+	                       		<field name="name"/>
+	                       </group>
+	                       <group>
+	                       		<field name="pro_championship_id"/>
+                       	   </group>
+                       </group>
+                       <notebook>
+	                       <page string="Pro PLayers">
+	                            <field name="pro_player_ids">
+	                                <tree string="Pro PLayers" editable="bottom">
+	                                    <field name="name"/>
+										<field name="role"/>	                                    
+	                                </tree>
+	                            </field>
+	                        </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>	
+
+        <record id="summoner_pro_team_tree" model="ir.ui.view">
+            <field name="name">summoner.pro.team.view.tree</field>
+            <field name="model">summoner.pro.team</field>
+            <field name="arch" type="xml">
+                <tree string="Pro Teams">
+                    <field name="name"/>
+                    <field name="pro_championship_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="summoner_pro_team_search" model="ir.ui.view">
+            <field name="name">summoner.pro.team.view.search</field>
+            <field name="model">summoner.pro.team</field>
+            <field name="arch" type="xml">
+                <search string="Pro Teams">
+                    <field name="name"/>
+                    <field name="pro_championship_id"/>
+                </search>
+            </field>
+        </record>
+        
+        <record id="summoner_pro_team_action_form" model="ir.actions.act_window">
+            <field name="name">Pro Teams</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">summoner.pro.team</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="summoner_pro_team_search"/>
+            <field name="view_id" ref="summoner_pro_team_tree"/>
+        </record>
+        
+        <!--PRO CHAMPIONSHIP VIEW-->
+        <record id="summoner_pro_championship_form" model="ir.ui.view">
+            <field name="name">summoner.pro.championship.view.form</field>
+            <field name="model">summoner.pro.championship</field>
+            <field name="arch" type="xml">
+                <form string="Pro Championship">
+                    <sheet>
+                       <group>
+	                       <group>
+	                       		<field name="name"/>
+	                       </group>
+	                       <group>
+                       	   </group>
+                       </group>
+                       <notebook>
+	                       <page string="Pro Teams">
+	                            <field name="pro_team_ids">
+	                                <tree string="Pro Teams" editable="bottom">
+	                                    <field name="name"/>
+	                                </tree>
+	                            </field>
+	                        </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>	
+
+        <record id="summoner_pro_championship_tree" model="ir.ui.view">
+            <field name="name">summoner.pro.championship.view.tree</field>
+            <field name="model">summoner.pro.championship</field>
+            <field name="arch" type="xml">
+                <tree string="Pro Championships">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="summoner_pro_championship_search" model="ir.ui.view">
+            <field name="name">summoner.pro.championship.view.search</field>
+            <field name="model">summoner.pro.championship</field>
+            <field name="arch" type="xml">
+                <search string="Pro Championships">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record id="summoner_pro_championship_action_form" model="ir.actions.act_window">
+            <field name="name">Pro Championships</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">summoner.pro.championship</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="summoner_pro_championship_search"/>
+            <field name="view_id" ref="summoner_pro_championship_tree"/>
+        </record>        
+
+        <!-- MENU -->
+		<!--Pro Menu-->		
+		<menuitem groups="base.group_no_one" id="pro_menu" parent="summoner_main_menu" name="Pro" sequence="2"/>
+		<menuitem action="summoner_pro_player_action_form"
+	        groups="base.group_no_one"
+	        id="menu_summoner_pro_player_action_form"
+	        parent="pro_menu" sequence="1"/>
+    	<menuitem action="summoner_pro_team_action_form"
+	        groups="base.group_no_one"
+	        id="menu_summoner_pro_team_action_form"
+	        parent="pro_menu" sequence="2"/>
+		<menuitem action="summoner_pro_championship_action_form"
+	        groups="base.group_no_one"
+	        id="menu_summoner_pro_championship_action_form"
+	        parent="pro_menu" sequence="3"/>
+	</data>
+</openerp>
