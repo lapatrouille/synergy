@@ -76,15 +76,19 @@
 									    	<th class="text-center"><strong>Champion</strong></th>
 									        <th class="text-center"><strong>Role</strong></th>
 									        <th class="text-center"><strong>KDA</strong></th>
-									        <th class="text-center"><strong>Items</strong></th>
+									        <th class="text-left"><strong>Items</strong></th>
 									        <th class="text-center"><strong>Stats</strong></th>
-									        <th class="text-center"><strong>Badge</strong></th>
+									        <!--<th class="text-center"><strong>Badge</strong></th>-->
 									    </tr>
 									  </thead>
 									  <tbody>
 									    <tr t-foreach="matches" t-as="match">
-									        <td class="text-center">
-												<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.champion_key}.png" width="70"/><br/>
+									        <td t-if="match.loose" class="text-center" style="background-color: rgba(255,0,0,0.3)">
+												<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.champion_key}.png" width="60"/><br/>
+									        	<strong><span t-esc="match.champion_name"/></strong>
+									        </td>
+									        <td t-if="match.win" class="text-center" style="background-color: rgba(0,255,0,0.3)">
+												<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.champion_key}.png" width="60"/><br/>
 									        	<strong><span t-esc="match.champion_name"/></strong>
 									        </td>
 									        <td class="text-center">
@@ -93,26 +97,32 @@
 								        		<img t-if="match.spell2id" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{match.spell2id}.png" width="30"/>
 									        </td>
 									        <td class="text-center">
-									        	<br/><span t-esc="match.kills"/>/<span t-esc="match.deaths"/>/<span t-esc="match.assists"/><br/><br/>
+									        	<br/><span t-esc="match.kills"/> / <span t-esc="match.deaths"/> / <span t-esc="match.assists"/><br/><br/>
 									        	<strong><span t-esc="match.kda"/> KDA</strong>
 								        	</td>
-								        	<td>
-								        		<img t-if="match.item0" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item0}.png" width="30"/>
-								        		<img t-if="match.item1" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item1}.png" width="30"/><br/>
-								        		<img t-if="match.item2" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item2}.png" width="30"/>
-								        		<img t-if="match.item3" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item3}.png" width="30"/><br/>
-								        		<img t-if="match.item4" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item4}.png" width="30"/>
-								        		<img t-if="match.item5" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item5}.png" width="30"/><br/>
+								        	<td class="text-center">
+								        		<div class="text-left">
+									        		<img t-if="match.item0" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item0}.png" width="30"/>
+									        		<img t-if="match.item1" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item1}.png" width="30"/><br/>	
+								        		</div>
+								        		<div class="text-left">
+								        			<img t-if="match.item2" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item2}.png" width="30"/>
+								        			<img t-if="match.item3" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item3}.png" width="30"/><br/>	
+								        		</div>
+								        		<div class="text-left">
+									        		<img t-if="match.item4" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item4}.png" width="30"/>
+									        		<img t-if="match.item5" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item5}.png" width="30"/><br/>	
+								        		</div>
 								        	</td>
 								        	<td class="text-center">
 								        		<br/>
 									        	Level <span t-esc="match.champlevel"/><br/>
 									        	<span t-esc="match.minionskilled"/> CS
 									    	</td>
-									        <td class="text-center">
-									        	<img t-if="match.loose" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/loose.jpg" width="60" height="60" alt="Loose"/>
-									        	<img t-if="match.win" class="img img-responsive img-circle" src="/synergy_website_summoner/static/img/win.jpg" width="60" height="60" alt="Win"/>
-									    	</td>
+									        <!--<td class="text-center">
+									        	<img t-if="match.loose" class="img img-circle" src="/synergy_website_summoner/static/img/loose.jpg" width="60" height="60" alt="Loose"/>
+									        	<img t-if="match.win" class="img img-circle" src="/synergy_website_summoner/static/img/win.jpg" width="60" height="60" alt="Win"/>
+									    	</td>-->
 									    </tr>
 									  </tbody>
 									</table>

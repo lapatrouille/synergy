@@ -260,9 +260,9 @@ class summoner(http.Controller):
             if details_participant_ids:
                 details_participant_id = details_participant_ids[0]
                 details_participant = details_participants_obj.browse(request.cr, 1, details_participant_id, context=request.context)
-                kills = float(details_participant.stats_id.kills)
-                deaths = float(details_participant.stats_id.deaths)
-                assists = float(details_participant.stats_id.assists)
+                kills = int(details_participant.stats_id.kills)
+                deaths = int(details_participant.stats_id.deaths)
+                assists = int(details_participant.stats_id.assists)
                 if deaths == 0:
                     kda = "Perfect"
                 else:
@@ -278,12 +278,10 @@ class summoner(http.Controller):
                     spell1 = details_participant.spell1id
                     spell1_url = "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/summoner-spell/" + spell1 +"?api_key=" + key
                     spell1 = GetJson(spell1_url)
-                    print spell1
                 if details_participant.spell2id:
                     spell2 = details_participant.spell2id
                     spell2_url = "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/summoner-spell/" + spell2 +"?api_key=" + key
                     spell2 = GetJson(spell2_url)
-                    print spell2
                 vals = {
                     'kills': kills,
                     'deaths': deaths,
