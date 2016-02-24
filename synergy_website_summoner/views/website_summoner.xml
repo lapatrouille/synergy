@@ -77,12 +77,12 @@
 									        <th class="text-center"><strong>Role</strong></th>
 									        <th class="text-center"><strong>KDA</strong></th>
 									        <th class="text-center"><strong>Stats</strong></th>
-									        <th class="text-center" colspan="2"><strong>Items</strong></th>
+									        <th class="text-center" colspan="3"><strong>Items</strong></th>
 									        <!--<th class="text-center"><strong>Badge</strong></th>-->
 									    </tr>
 									  </thead>
 									  <tbody>
-									    <tr t-foreach="matches" t-as="match" style="background-color: #A9F5A9">
+									    <tr t-foreach="matches" t-as="match">
 									        <td t-if="match.loose" class="text-center" style="background-color: rgba(255,0,0,0.3)">
 												<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.champion_key}.png" width="60"/><br/>
 									        	<strong><span t-esc="match.champion_name"/></strong>
@@ -107,12 +107,14 @@
 									    	</td>
 								        	<td class="text-right">
 								        		<img t-if="match.item0" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item0}.png" width="30"/><br/>
-							        			<img t-if="match.item2" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item2}.png" width="30"/><br/>
-								        		<img t-if="match.item4" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item4}.png" width="30"/><br/>
+							        			<img t-if="match.item3" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item2}.png" width="30"/><br/>
 								        	</td>
 								        	<td class="text-left">
 								        		<img t-if="match.item1" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item1}.png" width="30"/><br/>	
-							        			<img t-if="match.item3" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item3}.png" width="30"/><br/>	
+								        		<img t-if="match.item4" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item5}.png" width="30"/><br/>	
+								        	</td>
+								        	<td class="text-left">
+								        		<img t-if="match.item2" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item1}.png" width="30"/><br/>	
 								        		<img t-if="match.item5" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item5}.png" width="30"/><br/>	
 								        	</td>
 									        <!--<td class="text-center">
