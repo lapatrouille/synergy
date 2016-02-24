@@ -85,10 +85,10 @@ class summoner(http.Controller):
         result = GetJson(url)
         profile = result[name.lower()]
         domain = [('summoner_id','=', profile['id'])]
-        summoner_ids = summoner_obj.search(request.cr, request.uid, domain, context=request.context)
+        summoner_ids = summoner_obj.search(request.cr, 1, domain, context=request.context)
         if summoner_ids:
             summoner_id = summoner_ids[0]
-            summoner = summoner_obj.browse(request.cr, request.uid, summoner_id, context=request.context)
+            summoner = summoner_obj.browse(request.cr, 1, summoner_id, context=request.context)
             old_revision_date = summoner.revision_date
             revision_date = TsToDt(profile['revisionDate'])
             vals = {
@@ -100,7 +100,7 @@ class summoner(http.Controller):
                 'summoner_level': profile['summonerLevel'],
                 'region': region,
                     }
-            summoner_obj.write(request.cr, request.uid,[summoner_id], vals, context=request.context)
+            summoner_obj.write(request.cr, 1,[summoner_id], vals, context=request.context)
         else:
             old_revision_date = False
             revision_date = TsToDt(profile['revisionDate'])
@@ -113,8 +113,8 @@ class summoner(http.Controller):
                 'summoner_level': profile['summonerLevel'],
                 'region': region,
                     }
-            summoner_id = summoner_obj.create(request.cr, request.uid, vals, context=request.context)
-            summoner = summoner_obj.browse(request.cr, request.uid, summoner_id, context=request.context)
+            summoner_id = summoner_obj.create(request.cr, 1, vals, context=request.context)
+            summoner = summoner_obj.browse(request.cr, 1, summoner_id, context=request.context)
         kwargs['summoner'] = summoner
         kwargs['old_revision_date'] = old_revision_date
         return kwargs
@@ -150,8 +150,8 @@ class summoner(http.Controller):
                     'platform_id': match['platformId'],
                     'lane': match['lane'],
                         }
-                match_id = match_obj.create(request.cr, request.uid, vals, context=request.context)
-                match = match_obj.browse(request.cr, request.uid, match_id, context=request.context)
+                match_id = match_obj.create(request.cr, 1, vals, context=request.context)
+                match = match_obj.browse(request.cr, 1, match_id, context=request.context)
                 matches.append(match)
         kwargs['matches'] = matches
         return kwargs
@@ -207,8 +207,8 @@ class summoner(http.Controller):
                 'queuetype':  result_match.get('queueType'),
                 'matchduration': match_duration,
             }
-            match_details_id = details_obj.create(request.cr, request.uid, vals, request.context)
-            match_id = match_obj.write(request.cr, request.uid, [match.id], {'match_details_id': match_details_id}, context=request.context)
+            match_details_id = details_obj.create(request.cr, 1, vals, request.context)
+            match_id = match_obj.write(request.cr, 1, [match.id], {'match_details_id': match_details_id}, context=request.context)
             ## STILL NEED TO IMPLEMENT RUNES AND MASTERIES
             for participant in result_match.get('participants'):
                 vals = {
@@ -220,46 +220,46 @@ class summoner(http.Controller):
                     'highestachievedseasontier': participant.get('highestAchievedSeasonTier'),
                     'match_details_id': match_details_id,
                 }
-                match_details_participant_id = details_participants_obj.create(request.cr, request.uid, vals, request.context)
+                match_details_participant_id = details_participants_obj.create(request.cr, 1, vals, request.context)
                 stats = participant.get('stats')
                 vals = {}
                 for item in stats.items():
                     vals[item[0].lower()] = item[1]
                 vals['match_details_participant_id'] = match_details_participant_id
-                details_participants_stats_id = details_participants_stats_obj.create(request.cr, request.uid, vals, request.context)
-                details_participants_obj.write(request.cr, request.uid,[match_details_participant_id], {'stats_id': details_participants_stats_id}, request.context)
+                details_participants_stats_id = details_participants_stats_obj.create(request.cr, 1, vals, request.context)
+                details_participants_obj.write(request.cr, 1,[match_details_participant_id], {'stats_id': details_participants_stats_id}, request.context)
             for participantidentity in result_match.get('participantIdentities'):
                 vals = {
                     'participantid': participantidentity.get('participantId'),
                     'match_details_id': match_details_id,
                 }
-                match_details_participantidentities_id = details_participantidentities_obj.create(request.cr, request.uid, vals, request.context)
+                match_details_participantidentities_id = details_participantidentities_obj.create(request.cr, 1, vals, request.context)
                 player = participantidentity.get('player')
                 vals = {}
                 for item in player.items():
                     vals[item[0].lower()] = item[1]
                 vals['match_details_participantidentities_id'] = match_details_participantidentities_id
-                details_participantidentities_player_id = details_participantidentities_player_obj.create(request.cr, request.uid, vals, request.context)
-                details_participantidentities_player = details_participantidentities_player_obj.browse(request.cr, request.uid, details_participantidentities_player_id, request.context)
+                details_participantidentities_player_id = details_participantidentities_player_obj.create(request.cr, 1, vals, request.context)
+                details_participantidentities_player = details_participantidentities_player_obj.browse(request.cr, 1, details_participantidentities_player_id, request.context)
                 if details_participantidentities_player.summonerid == summoner.summoner_id:
-                    match_obj.write(request.cr, request.uid, [match.id], {'participant_id': participantidentity.get('participantId')}, request.context)
-                details_participantidentities_id = details_participantidentities_obj.write(request.cr, request.uid,[match_details_participantidentities_id], {'player': details_participantidentities_player_id}, request.context)
+                    match_obj.write(request.cr, 1, [match.id], {'participant_id': participantidentity.get('participantId')}, request.context)
+                details_participantidentities_id = details_participantidentities_obj.write(request.cr, 1,[match_details_participantidentities_id], {'player': details_participantidentities_player_id}, request.context)
             for team in result_match.get('teams'):
                 vals = {}
                 for item in team.items():
                     vals[item[0].lower()] = item[1]
                 vals['match_details_id'] = match_details_id
-                details_teams_obj.create(request.cr, request.uid, vals, request.context)
+                details_teams_obj.create(request.cr, 1, vals, request.context)
         return kwargs 
     
     def complete_matches(self, kwargs):
         match_obj = request.registry['summoner.matches']
         details_participants_obj = request.registry['summoner.matches.details.participants']
         for match in kwargs['matches']:
-            details_participant_ids = details_participants_obj.search(request.cr, request.uid, [('match_details_id','=', match.match_details_id.id), ('participantid','=', match.participant_id)], context=request.context)
+            details_participant_ids = details_participants_obj.search(request.cr, 1, [('match_details_id','=', match.match_details_id.id), ('participantid','=', match.participant_id)], context=request.context)
             if details_participant_ids:
                 details_participant_id = details_participant_ids[0]
-                details_participant = details_participants_obj.browse(request.cr, request.uid, details_participant_id, context=request.context)
+                details_participant = details_participants_obj.browse(request.cr, 1, details_participant_id, context=request.context)
                 kills = float(details_participant.stats_id.kills)
                 deaths = float(details_participant.stats_id.deaths)
                 assists = float(details_participant.stats_id.assists)
@@ -303,15 +303,15 @@ class summoner(http.Controller):
                     'spell1id': spell1.get('key'),
                     'spell2id': spell2.get('key'),
                 }
-                match_obj.write(request.cr, request.uid, [match.id], vals, context=request.context)
+                match_obj.write(request.cr, 1, [match.id], vals, context=request.context)
         return kwargs    
     
     def get_stored_data(self, kwargs):
         match_obj = request.registry['summoner.matches']
         summoner = kwargs['summoner']
         matches = []
-        for match_id in match_obj.search(request.cr, request.uid, [('summoner_id','=', summoner.id)], context=request.context):
-            match = match_obj.browse(request.cr, request.uid, match_id, context=request.context)
+        for match_id in match_obj.search(request.cr, 1, [('summoner_id','=', summoner.id)], context=request.context):
+            match = match_obj.browse(request.cr, 1, match_id, context=request.context)
             matches.append(match)
         kwargs['matches'] = matches
         return kwargs    
