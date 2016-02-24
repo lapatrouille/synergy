@@ -171,9 +171,9 @@ class summoner(http.Controller):
                 official_role = 'JNG'
             elif match.lane == 'BOTTOM':
                 official_role = 'BOT'
-                if match.lane == 'DUO_SUPPORT':
+                if match.role == 'DUO_SUPPORT':
                     official_role = 'SUP'
-                elif match.lane == 'DUO_CARRY':
+                elif match.role == 'DUO_CARRY':
                     official_role = 'ADC'
             match.write({'official_role': official_role})
         return kwargs
@@ -260,13 +260,19 @@ class summoner(http.Controller):
             if details_participant_ids:
                 details_participant_id = details_participant_ids[0]
                 details_participant = details_participants_obj.browse(request.cr, 1, details_participant_id, context=request.context)
-                kills = int(details_participant.stats_id.kills)
-                deaths = int(details_participant.stats_id.deaths)
-                assists = int(details_participant.stats_id.assists)
+                kills = 0
+                deaths = 0
+                assists = 0
+                if details_participant.stats_id.kills:
+                    kills = int(details_participant.stats_id.kills) or 0
+                if details_participant.stats_id.deaths:
+                    deaths = int(details_participant.stats_id.deaths) or 0
+                if details_participant.stats_id.assists:
+                    assists = int(details_participant.stats_id.assists) or 0
                 if deaths == 0:
                     kda = "Perfect"
                 else:
-                    kda = (kills + assists) / deaths
+                    kda = (float(kills) + float(assists)) / float(deaths)
                     kda = float("{0:.2f}".format(kda))
                 if details_participant.stats_id.winner:
                     win = True
