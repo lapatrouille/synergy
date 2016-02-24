@@ -107,14 +107,12 @@
 									    	</td>
 								        	<td class="text-right">
 								        		<img t-if="match.item0" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item0}.png" width="30"/><br/>
-							        			<img t-if="match.item3" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item2}.png" width="30"/><br/>
+							        			<img t-if="match.item2" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item2}.png" width="30"/><br/>
+								        		<img t-if="match.item4" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item4}.png" width="30"/><br/>
 								        	</td>
 								        	<td class="text-left">
 								        		<img t-if="match.item1" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item1}.png" width="30"/><br/>	
-								        		<img t-if="match.item4" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item5}.png" width="30"/><br/>	
-								        	</td>
-								        	<td class="text-left">
-								        		<img t-if="match.item2" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item1}.png" width="30"/><br/>	
+							        			<img t-if="match.item3" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item3}.png" width="30"/><br/>	
 								        		<img t-if="match.item5" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.item5}.png" width="30"/><br/>	
 								        	</td>
 									        <!--<td class="text-center">
