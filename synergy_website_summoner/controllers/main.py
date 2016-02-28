@@ -49,6 +49,7 @@ summoner_fields = [
     'bro_participants',
     'champions',
     'roles',
+    'ranked_stats'
     ]
 
 def urlEncodeNonAscii(b):
@@ -288,17 +289,36 @@ class summoner(http.Controller):
                         'spell2id': spell2.key,
                     }
                     match.update(vals)
-        return kwargs    
+        return kwargs
     
-    def get_stored_data(self, kwargs):
-        match_obj = request.registry['summoner.matches']
+    def get_ranked_stats(self, kwargs, region):
         summoner = kwargs['summoner']
-        matches = []
-        for match_id in match_obj.search(request.cr, 1, [('summoner_id','=', summoner.id)], context=request.context):
-            match = match_obj.browse(request.cr, 1, match_id, context=request.context)
-            matches.append(match)
-        kwargs['matches'] = matches
-        return kwargs    
+        stats_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/stats/by-summoner/" +  summoner.summoner_id + "/ranked?season=SEASON2016&api_key=" + key
+        result_stats = GetJson(stats_url)
+        champions = {}
+        kwargs['ranked_stats'] = {}
+        total_played = 0 #totalSessionsPlayed
+        total_won = 0 
+        total_lost = 0
+        total_winrate = 0
+        for champion in result_stats.get('champions'):
+            id = champion.get('id')
+            if id == 0:
+                stats = champion.get('stats')
+                total_played = int(stats.get('totalSessionsPlayed'))
+                total_won = int(stats.get('totalSessionsWon'))
+                total_lost = int(stats.get('totalSessionsLost'))
+        total_winrate = (float(total_won) / float(total_played)) * 100
+        total_winrate = float("{0:.2f}".format(total_winrate))
+        vals = {
+            'total_played': total_played,
+            'total_won':  total_won,
+            'total_lost': total_lost,
+            'total_winrate': total_winrate,
+        }
+        kwargs['ranked_stats'] = vals
+        print kwargs['ranked_stats']
+        return kwargs
     
     @http.route([
          '/summoner',
@@ -317,9 +337,10 @@ class summoner(http.Controller):
             print "3", DT.now()
             kwargs = self.get_match_details(kwargs, region)
             print "4", DT.now()
-            kawrgs = self.complete_matches(kwargs)
+            kwargs = self.complete_matches(kwargs)
             print "5", DT.now()
-#             kwargs = self.get_stored_data(kwargs)
+            kwargs = self.get_ranked_stats(kwargs, region)
+            print "6", DT.now()
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)

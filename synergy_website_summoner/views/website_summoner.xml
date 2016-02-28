@@ -44,6 +44,8 @@
 			                        <br/><strong>Level</strong> <span t-esc="summoner.summoner_level"/> / <strong>Server</strong> <span t-esc="summoner.region"/><br/>
 			                        <strong>Last Update:</strong> <span t-esc="summoner.revision_date"/><br/>
 			                        <strong>Id:</strong> <span t-esc="summoner.summoner_id"/><br/>
+			                        <strong>Total Played:</strong> <span t-esc="ranked_stats.get('total_played')"/> ( <span t-esc="ranked_stats.get('total_winrate')"/> %)<br/>
+			                        <strong>W </strong><span t-esc="ranked_stats.get('total_won')"/> / <strong>L </strong><span t-esc="ranked_stats.get('total_lost')"/><br/>
 		                        </div>
 		                        <div class="col-md-6" t-if="matches">
 		                            <h1>Matches</h1>
@@ -86,12 +88,12 @@
 								        		<span t-esc="match.get('champion_name')"/>
 									        </td>
 									        <td class="text-center" t-if="match.get('loose')"  style="background-color: rgba(255,0,0,0.3)">
-									        	<strong><span t-esc="match.get('kills')"/>/<span style="color: #B40404" t-esc="match.get('deaths')"/>/<span style="color: #01DF3A" t-esc="match.get('assists')"/></strong><br/>
+									        	<span t-esc="match.get('kills')"/> / <span style="color: #B40404" t-esc="match.get('deaths')"/> / <span style="color: #01DF3A" t-esc="match.get('assists')"/><br/>
 									        	<br/>
 									        	<strong><span t-esc="match.get('kda')"/> KDA</strong>
 								        	</td>
 								        	<td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
-									        	<strong><span t-esc="match.get('kills')"/>/<span style="color: #B40404" t-esc="match.get('deaths')"/>/<span style="color: #01DF3A" t-esc="match.get('assists')"/></strong><br/>
+									        	<span t-esc="match.get('kills')"/> / <span style="color: #B40404" t-esc="match.get('deaths')"/> / <span style="color: #01DF3A" t-esc="match.get('assists')"/><br/>
 									        	<br/>
 									        	<strong><span t-esc="match.get('kda')"/> KDA</strong>
 								        	</td>
