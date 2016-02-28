@@ -19,6 +19,43 @@
 #
 ###############################################################################
 from openerp import models, fields, api, _
+from datetime import datetime as DT, timedelta
+import calendar
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF, DEFAULT_SERVER_DATE_FORMAT as DATF
+from pytz import timezone
+import pytz
+import urllib
+import urllib2
+import json
+import time
+import operator
+import re, urlparse
+
+key = u"74537082-db44-4916-9ca3-09f8f8b7638e"
+
+def urlEncodeNonAscii(b):
+    return re.sub('[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
+
+def iriToUri(iri):
+    parts= urlparse.urlparse(iri)
+    return urlparse.urlunparse(
+        part.encode('idna') if parti==1 else urlEncodeNonAscii(part.encode('utf-8'))
+        for parti, part in enumerate(parts)
+    )
+
+def TsToDt(ts_date):
+    ts_date = ts_date / 1000
+    return DT.fromtimestamp(ts_date, tz=pytz.utc)
+
+def DtToTs(date):
+    dt_date = DT.strptime(date, DTF)
+    timestamp = calendar.timegm(dt_date.timetuple()) * 1000
+    return str(timestamp)
+
+def GetJson(url):
+    url = iriToUri(url)
+    result = urllib2.urlopen(url).read()
+    return json.loads(result)
 
 class summoner_summoner(models.Model):
     _name = 'summoner.summoner'
@@ -32,6 +69,55 @@ class summoner_summoner(models.Model):
     summoner_level = fields.Char('summonerLevel')
     region = fields.Char('Region')
     match_ids = fields.One2many('summoner.matches','summoner_id', 'Matches')
+    
+class summoner_champions(models.Model):
+    _name = 'summoner.champions'
+    _inherit = ['mail.thread']
+    
+    champion_id = fields.Integer('Champion Id')
+    title = fields.Char('Title')
+    key = fields.Char('Key')
+    name = fields.Char('Name')
+    
+class summoner_spells(models.Model):
+    _name = 'summoner.spells'
+    _inherit = ['mail.thread']
+    
+    spell_id = fields.Integer('Champion Id')
+    key = fields.Char('Key')
+    name = fields.Char('Name') 
+    
+class summoner_updates(models.TransientModel):
+    _name = 'summoner.updates'
+    
+    @api.one
+    def update_button(self):
+        champion_list_by_id_url = "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?dataById=True&api_key=" + key
+        result_champion = GetJson(champion_list_by_id_url)
+        champion_dict = result_champion['data']
+        champ_obj = self.env['summoner.champions']
+        for champ in champion_dict.items():
+            champ = champ[1]
+            vals = {
+                'champion_id': champ.get('id'),
+                'title': champ.get('title'),
+                'key': champ.get('key'),
+                'name': champ.get('name'),
+            }
+            champ_obj.create(vals)
+        spell_list_by_id_url = "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/summoner-spell?dataById=True&api_key=" + key
+        result_spell = GetJson(spell_list_by_id_url)
+        spell_dict = result_spell['data']
+        spell_obj = self.env['summoner.spells']
+        for spell in spell_dict.items():
+            spell = spell[1]
+            vals = {
+                'spell_id': spell.get('id'),
+                'key': spell.get('key'),
+                'name': spell.get('name'),
+            }
+            spell_obj.create(vals)
+        return True
     
 class summoner_matches(models.Model):
     _name = 'summoner.matches'

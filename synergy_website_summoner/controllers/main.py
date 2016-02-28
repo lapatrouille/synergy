@@ -123,26 +123,19 @@ class summoner(http.Controller):
         match_obj = request.registry['summoner.matches']
         summoner = kwargs['summoner']
         matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  summoner.summoner_id + "?api_key=" + key + "&rankedQueues=TEAM_BUILDER_DRAFT_RANKED_5x5"
-        if kwargs.get('old_revision_date'):
-            begin_time = DtToTs(kwargs['old_revision_date'])
-            matches_url = matches_url + "&beginTime=" + begin_time
+#         if kwargs.get('old_revision_date'):
+#             begin_time = DtToTs(kwargs['old_revision_date'])
+#             matches_url = matches_url + "&beginTime=" + begin_time
         result_matches = GetJson(matches_url)
         matches = []
         if result_matches.get('matches'):
             for match in result_matches['matches']:
                 date = TsToDt(match['timestamp'])
-                champion_id = match['champion']
-                champion_url = "https://global.api.pvp.net/api/lol/static-data/" + region + "/v1.2/champion/" + str(champion_id) + "?api_key=" + key
-                champion = GetJson(champion_url)
-                champion_key = champion['key']
-                champion_name = champion['name']
-                vals = {
+                match = {
                     'summoner_id': summoner.id,
                     'date': date,
-                    'champion_id': champion_id,
-                    'champion_name': champion_name,
-                    'champion_key': champion_key,
                     'region': match['region'],
+                    'champion_id': match['champion'],
                     'queue': match['queue'],
                     'season': match['season'],
                     'match_id': match['matchId'],
@@ -150,52 +143,51 @@ class summoner(http.Controller):
                     'platform_id': match['platformId'],
                     'lane': match['lane'],
                         }
-                match_id = match_obj.create(request.cr, 1, vals, context=request.context)
-                match = match_obj.browse(request.cr, 1, match_id, context=request.context)
                 matches.append(match)
-        kwargs['matches'] = matches
+        kwargs['matches'] = matches[:5]
         return kwargs
     
     def get_champion_details(self, kwargs, region):
-        champion_list_by_id_url = "https://global.api.pvp.net/api/lol/static-data/" + region + "/v1.2/champion?dataById=True&api_key=" + key
-        result_champion = GetJson(champion_list_by_id_url)
-        champion_dict = result_champion['data']
-        champions = {}
-        roles = {}
+        champ_obj = request.registry['summoner.champions']
         for match in kwargs['matches']:
-            if match.lane == 'MID':
+            champ_ids = champ_obj.search(request.cr, 1, [('champion_id','=', int(match.get('champion_id')))], context=request.context)
+            if champ_ids:
+                champ = champ_obj.browse(request.cr, 1, champ_ids[0], context=request.context)
+                champion_key = champ.key
+                champion_name = champ.name
+                vals = {
+                    'champion_name': champion_name,
+                    'champion_key': champion_key,
+                        }
+                match.update(vals)
+            if match.get('lane') == 'MID':
                 official_role = 'MID'
-            elif match.lane == 'TOP':
+            elif match.get('lane') == 'TOP':
                 official_role = 'TOP'
-            elif match.lane == 'JUNGLE':
+            elif match.get('lane') == 'JUNGLE':
                 official_role = 'JNG'
-            elif match.lane == 'BOTTOM':
+            elif match.get('lane') == 'BOTTOM':
                 official_role = 'BOT'
-                if match.role == 'DUO_SUPPORT':
+                if match.get('role') == 'DUO_SUPPORT':
                     official_role = 'SUP'
-                elif match.role == 'DUO_CARRY':
+                elif match.get('role') == 'DUO_CARRY':
                     official_role = 'ADC'
-            match.write({'official_role': official_role})
+            match['official_role'] = official_role
         return kwargs
 
     def get_match_details(self, kwargs, region):
         summoner = kwargs['summoner']
         summoner_obj = request.registry['summoner.summoner']
         match_obj = request.registry['summoner.matches']
-        details_obj = request.registry['summoner.matches.details']
-        details_participants_obj = request.registry['summoner.matches.details.participants']
-        details_participants_stats_obj = request.registry['summoner.matches.details.participants.stats']
-        details_participantidentities_obj = request.registry['summoner.matches.details.participantidentities']
-        details_participantidentities_player_obj = request.registry['summoner.matches.details.participantidentities.player']
-        details_teams_obj = request.registry['summoner.matches.details.teams']
+        i = 0
         for match in kwargs['matches']:
-            match_id = match.match_id
+            match_id = match.get('match_id')
+            i += 1
             match_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/" + str(match_id) + "?api_key=" + key
-            time.sleep(1)
             result_match = GetJson(match_url)
             match_creation = TsToDt(result_match.get('matchCreation'))
             match_duration = str(timedelta(seconds=result_match.get('matchDuration')))
-            vals = {
+            match_details = {
                 'matchid': result_match.get('matchId'),
                 'matchtype': result_match.get('matchType'),
                 'matchcreation': match_creation,
@@ -207,9 +199,8 @@ class summoner(http.Controller):
                 'queuetype':  result_match.get('queueType'),
                 'matchduration': match_duration,
             }
-            match_details_id = details_obj.create(request.cr, 1, vals, request.context)
-            match_id = match_obj.write(request.cr, 1, [match.id], {'match_details_id': match_details_id}, context=request.context)
-            ## STILL NEED TO IMPLEMENT RUNES AND MASTERIES
+            match['details'] = match_details
+            participants = []
             for participant in result_match.get('participants'):
                 vals = {
                     'spell1id': participant.get('spell1Id'),
@@ -218,96 +209,85 @@ class summoner(http.Controller):
                     'championid': participant.get('championId'),
                     'teamid': participant.get('teamId'),
                     'highestachievedseasontier': participant.get('highestAchievedSeasonTier'),
-                    'match_details_id': match_details_id,
                 }
-                match_details_participant_id = details_participants_obj.create(request.cr, 1, vals, request.context)
+                participants.append(vals)
                 stats = participant.get('stats')
-                vals = {}
+                values = {}
                 for item in stats.items():
-                    vals[item[0].lower()] = item[1]
-                vals['match_details_participant_id'] = match_details_participant_id
-                details_participants_stats_id = details_participants_stats_obj.create(request.cr, 1, vals, request.context)
-                details_participants_obj.write(request.cr, 1,[match_details_participant_id], {'stats_id': details_participants_stats_id}, request.context)
+                    values[item[0].lower()] = item[1]
+                vals['stats'] = values
+            match['participants'] = participants
+            participantidentities = []
             for participantidentity in result_match.get('participantIdentities'):
                 vals = {
                     'participantid': participantidentity.get('participantId'),
-                    'match_details_id': match_details_id,
                 }
-                match_details_participantidentities_id = details_participantidentities_obj.create(request.cr, 1, vals, request.context)
+                participantidentities.append(vals)
                 player = participantidentity.get('player')
-                vals = {}
+                values = {}
                 for item in player.items():
-                    vals[item[0].lower()] = item[1]
-                vals['match_details_participantidentities_id'] = match_details_participantidentities_id
-                details_participantidentities_player_id = details_participantidentities_player_obj.create(request.cr, 1, vals, request.context)
-                details_participantidentities_player = details_participantidentities_player_obj.browse(request.cr, 1, details_participantidentities_player_id, request.context)
-                if details_participantidentities_player.summonerid == summoner.summoner_id:
-                    match_obj.write(request.cr, 1, [match.id], {'participant_id': participantidentity.get('participantId')}, request.context)
-                details_participantidentities_id = details_participantidentities_obj.write(request.cr, 1,[match_details_participantidentities_id], {'player': details_participantidentities_player_id}, request.context)
-            for team in result_match.get('teams'):
-                vals = {}
-                for item in team.items():
-                    vals[item[0].lower()] = item[1]
-                vals['match_details_id'] = match_details_id
-                details_teams_obj.create(request.cr, 1, vals, request.context)
+                    values[item[0].lower()] = item[1]
+                vals['player'] = values
+                summoner_id = int(values.get('summonerid'))
+                if summoner_id == int(summoner.summoner_id):
+                    match['participant_id'] = participantidentity.get('participantId')
+            match['participantidentities'] = participantidentities
         return kwargs 
     
     def complete_matches(self, kwargs):
-        match_obj = request.registry['summoner.matches']
-        details_participants_obj = request.registry['summoner.matches.details.participants']
+        spell_obj = request.registry['summoner.spells']
         for match in kwargs['matches']:
-            details_participant_ids = details_participants_obj.search(request.cr, 1, [('match_details_id','=', match.match_details_id.id), ('participantid','=', match.participant_id)], context=request.context)
-            if details_participant_ids:
-                details_participant_id = details_participant_ids[0]
-                details_participant = details_participants_obj.browse(request.cr, 1, details_participant_id, context=request.context)
-                kills = 0
-                deaths = 0
-                assists = 0
-                if details_participant.stats_id.kills:
-                    kills = int(details_participant.stats_id.kills) or 0
-                if details_participant.stats_id.deaths:
-                    deaths = int(details_participant.stats_id.deaths) or 0
-                if details_participant.stats_id.assists:
-                    assists = int(details_participant.stats_id.assists) or 0
-                if deaths == 0:
-                    kda = "Perfect"
-                else:
-                    kda = (float(kills) + float(assists)) / float(deaths)
-                    kda = float("{0:.2f}".format(kda))
-                if details_participant.stats_id.winner:
-                    win = True
-                    loose = False
-                else:
-                    win = False
-                    loose = True
-                if details_participant.spell1id:
-                    spell1 = details_participant.spell1id
-                    spell1_url = "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/summoner-spell/" + spell1 +"?api_key=" + key
-                    spell1 = GetJson(spell1_url)
-                if details_participant.spell2id:
-                    spell2 = details_participant.spell2id
-                    spell2_url = "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/summoner-spell/" + spell2 +"?api_key=" + key
-                    spell2 = GetJson(spell2_url)
-                vals = {
-                    'kills': kills,
-                    'deaths': deaths,
-                    'assists': assists,
-                    'kda': kda,
-                    'win': win,
-                    'loose': loose,
-                    'item0': details_participant.stats_id.item0,
-                    'item1': details_participant.stats_id.item1,
-                    'item2': details_participant.stats_id.item2,
-                    'item3': details_participant.stats_id.item3,
-                    'item4': details_participant.stats_id.item4,
-                    'item5': details_participant.stats_id.item5,
-                    'item6': details_participant.stats_id.item6,
-                    'minionskilled': int(details_participant.stats_id.minionskilled) + int(details_participant.stats_id.neutralminionskilled),
-                    'champlevel': details_participant.stats_id.champlevel,
-                    'spell1id': spell1.get('key'),
-                    'spell2id': spell2.get('key'),
-                }
-                match_obj.write(request.cr, 1, [match.id], vals, context=request.context)
+            for participant in match.get('participants'):
+                if participant.get('participantid') == match.get('participant_id'):
+                    stats = participant.get('stats')
+                    kills = 0
+                    deaths = 0
+                    assists = 0
+                    if stats.get('kills'):
+                        kills = int(stats.get('kills')) or 0
+                    if stats.get('deaths'):
+                        deaths = int(stats.get('deaths')) or 0
+                    if stats.get('assists'):
+                        assists = int(stats.get('assists')) or 0
+                    if deaths == 0:
+                        kda = "Perfect"
+                    else:
+                        kda = (float(kills) + float(assists)) / float(deaths)
+                        kda = float("{0:.2f}".format(kda))
+                    if stats.get('winner'):
+                        win = True
+                        loose = False
+                    else:
+                        win = False
+                        loose = True
+                    if participant.get('spell1id'):
+                        sepll1_ids = spell_obj.search(request.cr, 1, [('spell_id','=', int(participant.get('spell1id')))], context=request.context)
+                        if sepll1_ids:
+                            spell1 = spell_obj.browse(request.cr, 1, sepll1_ids[0], context=request.context)
+                    if participant.get('spell2id'):
+                        sepll2_ids = spell_obj.search(request.cr, 1, [('spell_id','=', int(participant.get('spell2id')))], context=request.context)
+                        if sepll2_ids:
+                            spell2 = spell_obj.browse(request.cr, 1, sepll2_ids[0], context=request.context)
+                    vals = {
+                        'kills': kills,
+                        'deaths': deaths,
+                        'assists': assists,
+                        'kda': kda,
+                        'win': win,
+                        'loose': loose,
+                        'item0': stats.get('item0'),
+                        'item1': stats.get('item1'),
+                        'item2': stats.get('item2'),
+                        'item3': stats.get('item3'),
+                        'item4': stats.get('item4'),
+                        'item5': stats.get('item5'),
+                        'item6': stats.get('item6'),
+                        'minionskilled': int(stats.get('minionskilled')) + int(stats.get('neutralminionskilled')),
+                        'champlevel': stats.get('champlevel'),
+                        'spell1id': spell1.key,
+                        'spell2id': spell2.key,
+                    }
+                    match.update(vals)
         return kwargs    
     
     def get_stored_data(self, kwargs):
@@ -328,12 +308,18 @@ class summoner(http.Controller):
         if kwargs:
             name = kwargs.get('summoner_name')
             region = kwargs.get('summoner_region')
+            print "0", DT.now()
             kwargs = self.get_profile(name, region)
+            print "1", DT.now()
             kwargs = self.get_matches(kwargs, region)
+            print "2", DT.now()
             kwargs = self.get_champion_details(kwargs, region)
+            print "3", DT.now()
             kwargs = self.get_match_details(kwargs, region)
+            print "4", DT.now()
             kawrgs = self.complete_matches(kwargs)
-            kwargs = self.get_stored_data(kwargs)
+            print "5", DT.now()
+#             kwargs = self.get_stored_data(kwargs)
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)

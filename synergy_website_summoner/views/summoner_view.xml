@@ -230,7 +230,150 @@
             <field name="search_view_id" ref="summoner_matches_details_search"/>
             <field name="view_id" ref="summoner_matches_details_tree"/>
         </record>
+        
+        
+		<!--SUMMONER CHAMPIONS VIEWS-->
+        <record id="summoner_champions_form" model="ir.ui.view">
+            <field name="name">summoner.champions.view.form</field>
+            <field name="model">summoner.champions</field>
+            <field name="arch" type="xml">
+                <form string="Champion">
+                    <sheet>
+                       <group>
+	                       <group>
+	                       		<field name="name"/>
+	                       		<field name="key"/>
+	                       </group>
+	                       <group>
+	                       		<field name="champion_id"/>
+	                       		<field name="title"/>
+                       	   </group>
+                       </group>
+                    </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>	
 
+        <record id="summoner_champions_tree" model="ir.ui.view">
+            <field name="name">summoner.champions.view.tree</field>
+            <field name="model">summoner.champions</field>
+            <field name="arch" type="xml">
+                <tree string="Champions">
+                    <field name="name"/>
+                    <field name="key"/>
+                    <field name="champion_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="summoner_champions_search" model="ir.ui.view">
+            <field name="name">summoner.champions.view.search</field>
+            <field name="model">summoner.champions</field>
+            <field name="arch" type="xml">
+                <search string="Champions">
+                    <field name="name"/>
+                    <field name="key"/>
+                    <field name="champion_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="summoner_champions_action_form" model="ir.actions.act_window">
+            <field name="name">Champions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">summoner.champions</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="summoner_champions_search"/>
+            <field name="view_id" ref="summoner_champions_tree"/>
+        </record>
+
+		<!--SUMMONER SPELLS VIEWS-->
+        <record id="summoner_spells_form" model="ir.ui.view">
+            <field name="name">summoner.spells.view.form</field>
+            <field name="model">summoner.spells</field>
+            <field name="arch" type="xml">
+                <form string="Spell">
+                    <sheet>
+                       <group>
+	                       <group>
+	                       		<field name="name"/>
+	                       		<field name="key"/>
+	                       </group>
+	                       <group>
+	                       		<field name="spell_id"/>
+                       	   </group>
+                       </group>
+                    </sheet>
+	                <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>	
+
+        <record id="summoner_spells_tree" model="ir.ui.view">
+            <field name="name">summoner.spells.view.tree</field>
+            <field name="model">summoner.spells</field>
+            <field name="arch" type="xml">
+                <tree string="Spells">
+                    <field name="name"/>
+                    <field name="key"/>
+                    <field name="spell_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="summoner_spells_search" model="ir.ui.view">
+            <field name="name">summoner.spells.view.search</field>
+            <field name="model">summoner.spells</field>
+            <field name="arch" type="xml">
+                <search string="Spells">
+                    <field name="name"/>
+                    <field name="key"/>
+                    <field name="spell_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="summoner_spells_action_form" model="ir.actions.act_window">
+            <field name="name">Spells</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">summoner.spells</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="summoner_spells_search"/>
+            <field name="view_id" ref="summoner_spells_tree"/>
+        </record>
+        
+        
+		<!--SUMMONER UPDATES VIEWS-->
+        <record id="summoner_updates_form" model="ir.ui.view">
+            <field name="name">summoner.updates.view.form</field>
+            <field name="model">summoner.updates</field>
+            <field name="arch" type="xml">
+            	<form>
+	            	<footer>
+	            		<button name="update_button" string="Update" type="object" class="oe_highlight"/>
+	                    or
+	                    <button string="Cancel" class="oe_link" special="cancel"/>
+	            	</footer>
+            	</form>
+            </field>
+        </record>        
+        
+		<record model="ir.actions.act_window" id="summoner_updates_action_form">
+            <field name="name">Update Values</field>
+            <field name="res_model">summoner.updates</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+        
         <!-- MENU -->
         <!--Main Menu-->
         <menuitem groups="base.group_no_one" id="summoner_main_menu" name="Summoners" sequence="100"/>
@@ -248,5 +391,19 @@
 	        groups="base.group_no_one"
 	        id="menu_summoner_matches_details_action_form"
 	        parent="summoner_menu" sequence="3"/>
+		
+		<menuitem groups="base.group_no_one" id="summoner_settings_menu" parent="summoner_main_menu" name="Summoners Settings" sequence="2"/>
+		<menuitem action="summoner_champions_action_form"
+	        groups="base.group_no_one"
+	        id="menu_summoner_champions_action_form"
+	        parent="summoner_settings_menu" sequence="1"/>
+		<menuitem action="summoner_spells_action_form"
+	        groups="base.group_no_one"
+	        id="menu_summoner_spells_action_form"
+	        parent="summoner_settings_menu" sequence="2"/>
+		<menuitem action="summoner_updates_action_form"
+	        groups="base.group_no_one"
+	        id="menu_summoner_updates_action_form"
+	        parent="summoner_settings_menu" sequence="3"/>
 	</data>
 </openerp>
