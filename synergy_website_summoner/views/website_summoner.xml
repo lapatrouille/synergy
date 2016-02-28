@@ -66,51 +66,51 @@
 									  </thead>
 									  <tbody>
 									    <tr t-foreach="matches" t-as="match">
-									        <td class="text-center" t-if="match.get('loose')"  style="background-color: rgba(255,0,0,0.3)">
+									        <td class="text-center" t-if="match.get('loose')"  style="background-color: #981B1E">
 												<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_key')}.png" width="60"/><br/>
 									        </td>
-									        <td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
+									        <td class="text-center" t-if="match.get('win')" style="background-color: #349946">
 												<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_key')}.png" width="60"/><br/>
 									        </td>
-									        <td t-if="match.get('loose')" class="text-center" style="background-color: rgba(255,0,0,0.3)">
+									        <td t-if="match.get('loose')" class="text-center" style="background-color: #981B1E">
 								        		<img t-if="match.get('spell1id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{match.get('spell1id')}.png" width="30"/><br/>
 								        		<img t-if="match.get('spell2id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{match.get('spell2id')}.png" width="30"/>
 									        </td>
-									        <td t-if="match.get('win')" class="text-center" style="background-color: #A9F5A9">
+									        <td t-if="match.get('win')" class="text-center" style="background-color: #349946">
 								        		<img t-if="match.get('spell1id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{match.get('spell1id')}.png" width="30"/><br/>
 								        		<img t-if="match.get('spell2id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{match.get('spell2id')}.png" width="30"/>
 									        </td>
-									        <td class="text-center" t-if="match.get('loose')"  style="background-color: rgba(255,0,0,0.3)">
+									        <td class="text-center">
 								        		<strong><span t-esc="match.get('official_role')"/><br/></strong>
 								        		<br/>
 								        		<span t-esc="match.get('champion_name')"/>
 									        </td>
-									        <td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
+									        <!--<td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
 								        		<strong><span t-esc="match.get('official_role')"/><br/></strong>
 								        		<br/>
 								        		<span t-esc="match.get('champion_name')"/>
-									        </td>
-									        <td class="text-center" t-if="match.get('loose')"  style="background-color: rgba(255,0,0,0.3)">
+									        </td>-->
+									        <td class="text-center">
 									        	<span t-esc="match.get('kills')"/> / <span style="color: #B40404" t-esc="match.get('deaths')"/> / <span style="color: #01DF3A" t-esc="match.get('assists')"/><br/>
 									        	<br/>
 									        	<strong><span t-esc="match.get('kda')"/> KDA</strong>
 								        	</td>
-								        	<td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
+								        	<!--<td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
 									        	<span t-esc="match.get('kills')"/> / <span style="color: #B40404" t-esc="match.get('deaths')"/> / <span style="color: #01DF3A" t-esc="match.get('assists')"/><br/>
 									        	<br/>
 									        	<strong><span t-esc="match.get('kda')"/> KDA</strong>
-								        	</td>
-								        	<td class="text-center" t-if="match.get('loose')"  style="background-color: rgba(255,0,0,0.3)">
+								        	</td>-->
+								        	<td class="text-center">
 									        	Lvl <span t-esc="match.get('champlevel')"/><br/>
 									        	<br/>
 									        	<span t-esc="match.get('minionskilled')"/> CS
 									    	</td>
-									    	<td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
+									    	<!--<td class="text-center" t-if="match.get('win')" style="background-color: #A9F5A9">
 									        	Lvl <span t-esc="match.get('champlevel')"/><br/>
 									        	<br/>
 									        	<span t-esc="match.get('minionskilled')"/> CS
-									    	</td>
-								        	<td class="text-left" t-if="match.get('loose')"  style="background-color: rgba(255,0,0,0.3)">
+									    	</td>-->
+								        	<td class="text-left">
 								        		<img t-if="match.get('item0')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item0')}.png" width="30"/>
 							        			<img t-if="match.get('item1')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item1')}.png" width="30"/>
 								        		<img t-if="match.get('item2')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item2')}.png" width="30"/><br/>
@@ -118,14 +118,14 @@
 							        			<img t-if="match.get('item4')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item4')}.png" width="30"/>	
 								        		<img t-if="match.get('item5')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item5')}.png" width="30"/>	
 								        	</td>
-								        	<td class="text-left" t-if="match.get('win')" style="background-color: #A9F5A9">
+								        	<!--<td class="text-left" t-if="match.get('win')" style="background-color: #A9F5A9">
 								        		<img t-if="match.get('item0')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item0')}.png" width="30"/>
 							        			<img t-if="match.get('item1')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item1')}.png" width="30"/>
 								        		<img t-if="match.get('item2')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item2')}.png" width="30"/><br/>
 								        		<img t-if="match.get('item3')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item3')}.png" width="30"/>
 							        			<img t-if="match.get('item4')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item4')}.png" width="30"/>	
 								        		<img t-if="match.get('item5')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item5')}.png" width="30"/>	
-								        	</td>
+								        	</td>-->
 								        	<tr class="spacer"><td></td></tr>
 									    </tr>
 									  </tbody>
