@@ -46,6 +46,9 @@
 			                        <strong>Id:</strong> <span t-esc="summoner.summoner_id"/><br/>
 			                        <strong>Total Played:</strong> <span t-esc="ranked_stats.get('total_played')"/> ( <span t-esc="ranked_stats.get('total_winrate')"/> %)<br/>
 			                        <strong>W </strong><span t-esc="ranked_stats.get('total_won')"/> / <strong>L </strong><span t-esc="ranked_stats.get('total_lost')"/><br/>
+			                        <h3>League Details:</h3>
+			                        <span t-esc="ranked_stats.get('league_name')"/><br/>
+			                        <span t-esc="ranked_stats.get('league_tier')"/> <span t-esc="ranked_stats.get('league_division')"/> <strong><span t-esc="ranked_stats.get('league_points')"/> LP</strong>
 		                        </div>
 		                        <div class="col-md-6" t-if="matches">
 		                            <h1>Matches</h1>
