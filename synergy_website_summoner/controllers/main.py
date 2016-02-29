@@ -297,7 +297,6 @@ class summoner(http.Controller):
         ranked_stats = GetJson(ranked_url)
         kwargs['ranked_stats'] = {}
         ranked_stats =  ranked_stats[str(summoner.summoner_id)][0]
-        print ranked_stats
         entry = ranked_stats.get('entries')[0]
         total_won = int(entry.get('wins'))
         total_lost = int(entry.get('losses'))
@@ -315,7 +314,32 @@ class summoner(http.Controller):
             'league_points': entry.get('leaguePoints'),
         }
         kwargs['ranked_stats'] = vals
-        print kwargs['ranked_stats']
+        return kwargs
+    
+    def get_champions_stats(self, kwargs, region):
+        summoner = kwargs['summoner']
+        stats_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/stats/by-summoner/" +  summoner.summoner_id + "/ranked?season=SEASON2016&api_key=" + key
+        stats = GetJson(stats_url)
+        kwargs['champions'] = {}
+        print stats
+#         ranked_stats =  ranked_stats[str(summoner.summoner_id)][0]
+#         entry = ranked_stats.get('entries')[0]
+#         total_won = int(entry.get('wins'))
+#         total_lost = int(entry.get('losses'))
+#         total_played = total_won + total_lost
+#         total_winrate = (float(total_won) / float(total_played)) * 100
+#         total_winrate = float("{0:.2f}".format(total_winrate))
+#         vals = {
+#             'total_played': total_played,
+#             'total_won':  total_won,
+#             'total_lost': total_lost,
+#             'total_winrate': total_winrate,
+#             'league_name': ranked_stats.get('name'),
+#             'league_tier': ranked_stats.get('tier'),
+#             'league_division': entry.get('division'),
+#             'league_points': entry.get('leaguePoints'),
+#         }
+#         kwargs['ranked_stats'] = vals
         return kwargs
     
     @http.route([
@@ -339,6 +363,8 @@ class summoner(http.Controller):
             print "5", DT.now()
             kwargs = self.get_ranked_stats(kwargs, region)
             print "6", DT.now()
+            kwargs = self.get_champions_stats(kwargs, region)
+            print "7"
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)
