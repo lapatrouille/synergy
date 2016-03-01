@@ -59,7 +59,7 @@
 									</ul>
 									<div class="tab-content">
 			                        	<div id="matches" class="tab-pane fade in active">
-											<table class="table table-condensed">
+											<table class="table table-responsive">
 											  <thead>
 											    <tr>
 											    	<th width="80"></th>
@@ -67,18 +67,18 @@
 											        <th></th>
 											        <th></th>
 											        <th></th>
-											        <th width="110"></th>
+											        <th width="130"></th>
 											        <!--<th class="text-center"><strong>Badge</strong></th>-->
 											    </tr>
 											  </thead>
 											  <tbody>
 											    <tr t-foreach="matches" t-as="match" >
-											    	<tr class="spacer" style="background-color: #0B1423" t-if="match.get('loose')"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-											  		<tr class="spacer" style="background-color: #8DBC6F" t-if="match.get('win')"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-											        <td class="text-center" t-if="match.get('loose')" style="background-image: url('synergy_website_summoner/static/img/loose.jpg'); background-size: 80px 80px;">
+											    	<tr class="spacer" style="background-color: #151E2A" t-if="match.get('loose')"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+											  		<tr class="spacer" style="background-color: #8EBC6F" t-if="match.get('win')"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+											        <td class="text-center" t-if="match.get('loose')" style="background-image: url('synergy_website_summoner/static/img/loose2.jpg'); background-size: 80px 80px;">
 								        				<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_key')}.png" width="60"/>
 													</td>
-											        <td class="text-center" t-if="match.get('win')" style="background-image: url('synergy_website_summoner/static/img/win.jpg');">
+											        <td class="text-center" t-if="match.get('win')" style="background-image: url('synergy_website_summoner/static/img/win2.jpg');">
 														<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_key')}.png" width="60"/>
 													</td>
 											        <td class="text-center" >
@@ -101,19 +101,19 @@
 											        	<span t-esc="match.get('minionskilled')"/> CS
 											    	</td>
 										        	<td class="text-left">
-										        		<img t-if="match.get('item0')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item0')}.png" width="30"/>
-									        			<img t-if="match.get('item1')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item1')}.png" width="30"/>
-										        		<img t-if="match.get('item2')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item2')}.png" width="30"/><br/>
-										        		<img t-if="match.get('item3')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item3')}.png" width="30"/>
-									        			<img t-if="match.get('item4')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item4')}.png" width="30"/>	
-										        		<img t-if="match.get('item5')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item5')}.png" width="30"/>	
+										        		<img class="img img-responsive" t-if="match.get('item0')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item0')}.png" width="30"/>
+									        			<img class="img img-responsive" t-if="match.get('item1')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item1')}.png" width="30"/>
+										        		<img class="img img-responsive" t-if="match.get('item2')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item2')}.png" width="30"/><br/>
+										        		<img class="img img-responsive" t-if="match.get('item3')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item3')}.png" width="30"/>
+									        			<img class="img img-responsive" t-if="match.get('item4')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item4')}.png" width="30"/>	
+										        		<img class="img img-responsive" t-if="match.get('item5')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item5')}.png" width="30"/>	
 										        	</td>
 											    </tr>
 											  </tbody>
 											</table>
 										</div>
 										<div id="champions" class="tab-pane fade">
-											<table class="table table-condensed" t-if="champions">
+											<table class="table table-responsive" t-if="champions">
 											  <thead>
 											    <tr>
 											    	<th class="text-left" colspan="2">Champion</th>
@@ -150,7 +150,6 @@
 											        	<strong><span t-esc="champion.get('gold_earned')"/></strong><br/>
 											        	(<span t-esc="champion.get('total_gold_earned')"/>)
 										        	</td>
-										        	<tr class="spacer"><td></td></tr>
 											    </tr>
 											  </tbody>
 											</table>
