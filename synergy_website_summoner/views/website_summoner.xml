@@ -50,7 +50,7 @@
 			                        <span t-esc="ranked_stats.get('league_name')"/><br/>
 			                        <span t-esc="ranked_stats.get('league_tier')"/> <span t-esc="ranked_stats.get('league_division')"/> <strong><span t-esc="ranked_stats.get('league_points')"/> LP</strong>
 		                        </div>
-		                        <div class="col-md-6" t-if="matches" >
+		                        <div class="col-md-7" t-if="matches">
 		                        	<ul class="nav nav-tabs" role="tablist">
 									    <li class="active"><a data-toggle="pill" href="#matches">Matches</a></li>
 									    <li><a data-toggle="pill" href="#champions">Champions</a></li>
@@ -113,24 +113,45 @@
 											</table>
 										</div>
 										<div id="champions" class="tab-pane fade">
-											<h3>Champions TEST</h3>
-											<table class="table table-condensed">
+											<table class="table table-condensed" t-if="champions">
 											  <thead>
 											    <tr>
-											    	<th width="80"></th>
-											        <th width="40"></th>
-											        <th></th>
-											        <th></th>
-											        <th></th>
-											        <th width="110"></th>
-											        <!--<th class="text-center"><strong>Badge</strong></th>-->
+											    	<th class="text-left" colspan="2">Champion</th>
+											        <th class="text-center">Win Rate</th>
+											        <th class="text-center" colspan="2">KDA</th>
+											        <th class="text-center">Gold</th>
 											    </tr>
 											  </thead>
 											  <tbody>
-											    <!--<tr t-foreach="champions" t-as="chmapion" >
-											        
+											    <tr t-foreach="champions" t-as="champion" >
+											        <td class="text-center">
+								        				<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{champion.get('champion_key')}.png" width="40"/>
+													</td>
+													<td class="text-left">
+								        				<strong><span t-esc="champion.get('champion_name')"/></strong><br/>
+								        				<i><span t-esc="champion.get('champion_title')"/></i>
+													</td>
+													<td class="text-center">
+											        	<strong>P </strong> <span t-esc="champion.get('total_played')"/> ( <span t-esc="champion.get('total_winrate')"/> %)<br/>
+			                        					<strong>W </strong><span t-esc="champion.get('total_won')"/> / <strong>L </strong><span t-esc="champion.get('total_lost')"/><br/>
+										        	</td>
+													<td class="text-center">
+											        	<strong><span t-esc="champion.get('kills')"/></strong>  / 
+											        	<strong><span style="color: #B40404" t-esc="champion.get('deaths')"/></strong> / 
+											        	<strong><span style="color: #01DF3A" t-esc="champion.get('assists')"/></strong><br/>
+											        	<span t-esc="champion.get('total_kills')"/> / 
+										        		<span style="color: #B40404" t-esc="champion.get('total_deaths')"/> / 
+										        		<span style="color: #01DF3A" t-esc="champion.get('total_assists')"/><br/>
+										        	</td>
+										        	<td class="text-left">
+										        		<strong><span t-esc="champion.get('kda')"/> KDA</strong>
+										        	</td>
+										        	<td class="text-center">
+											        	<strong><span t-esc="champion.get('gold_earned')"/></strong><br/>
+											        	(<span t-esc="champion.get('total_gold_earned')"/>)
+										        	</td>
 										        	<tr class="spacer"><td></td></tr>
-											    </tr>-->
+											    </tr>
 											  </tbody>
 											</table>
 										</div>

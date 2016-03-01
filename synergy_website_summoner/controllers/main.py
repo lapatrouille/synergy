@@ -35,7 +35,7 @@ import urllib
 import urllib2
 import json
 import time
-import operator
+from operator import itemgetter
 import re, urlparse
 
 key = u"74537082-db44-4916-9ca3-09f8f8b7638e"
@@ -317,29 +317,72 @@ class summoner(http.Controller):
         return kwargs
     
     def get_champions_stats(self, kwargs, region):
+        champ_obj = request.registry['summoner.champions']
         summoner = kwargs['summoner']
         stats_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/stats/by-summoner/" +  summoner.summoner_id + "/ranked?season=SEASON2016&api_key=" + key
         stats = GetJson(stats_url)
-        kwargs['champions'] = {}
-        print stats
-#         ranked_stats =  ranked_stats[str(summoner.summoner_id)][0]
-#         entry = ranked_stats.get('entries')[0]
-#         total_won = int(entry.get('wins'))
-#         total_lost = int(entry.get('losses'))
-#         total_played = total_won + total_lost
-#         total_winrate = (float(total_won) / float(total_played)) * 100
-#         total_winrate = float("{0:.2f}".format(total_winrate))
-#         vals = {
-#             'total_played': total_played,
-#             'total_won':  total_won,
-#             'total_lost': total_lost,
-#             'total_winrate': total_winrate,
-#             'league_name': ranked_stats.get('name'),
-#             'league_tier': ranked_stats.get('tier'),
-#             'league_division': entry.get('division'),
-#             'league_points': entry.get('leaguePoints'),
-#         }
-#         kwargs['ranked_stats'] = vals
+        kwargs['champions'] = []
+        champions = stats.get('champions')
+        for champion in champions:
+            if champion.get('id') == 0:
+                continue
+            stats = champion.get('stats')
+            if champion.get('id') == 68:
+                print stats
+            total_won = int(stats.get('totalSessionsWon'))
+            total_lost = int(stats.get('totalSessionsLost'))
+            total_played = int(stats.get('totalSessionsPlayed'))
+            total_winrate = (float(total_won) / float(total_played)) * 100
+            total_winrate = float("{0:.2f}".format(total_winrate))
+            total_kills = int(stats.get('totalChampionKills')) or 0
+            total_deaths = int(stats.get('totalDeathsPerSession')) or 0
+            total_assists = int(stats.get('totalAssists')) or 0
+            fb_pct = float(stats.get('totalFirstBlood')) / float(total_played) *100
+            fb_pct = float("{0:.2f}".format(fb_pct))
+            total_gold_earned = stats.get('totalGoldEarned')
+            kills = float(total_kills) / float(total_played)
+            kills = float("{0:.2f}".format(kills))
+            deaths = float(total_deaths) / float(total_played)
+            deaths = float("{0:.2f}".format(deaths))
+            assists = float(total_assists) / float(total_played)
+            assists = float("{0:.2f}".format(assists))
+            gold_earned = float(total_gold_earned) / float(total_played)
+            gold_earned = float("{0:.2f}".format(gold_earned))
+            if deaths == 0:
+                kda = "Perfect"
+            else:
+                kda = (float(kills) + float(assists)) / float(deaths)
+                kda = float("{0:.2f}".format(kda))
+            vals = {
+                'total_played': total_played,
+                'total_won':  total_won,
+                'total_lost': total_lost,
+                'total_winrate': total_winrate,
+                'total_kills': total_kills,
+                'total_deaths': total_deaths,
+                'total_assists': total_assists,
+                'total_gold_earned': total_gold_earned,
+                'kills': kills,
+                'deaths': deaths,
+                'assists': assists,
+                'gold_earned': gold_earned,
+                'kda': kda,
+                'fb_pct': fb_pct,
+            }
+            champ_ids = champ_obj.search(request.cr, 1, [('champion_id','=', int(champion.get('id')))], context=request.context)
+            if champ_ids:
+                champ = champ_obj.browse(request.cr, 1, champ_ids[0], context=request.context)
+                champion_key = champ.key
+                champion_name = champ.name
+                champion_title = champ.title
+                values = {
+                    'champion_name': champion_name,
+                    'champion_key': champion_key,
+                    'champion_title': champion_title,
+                }
+                vals.update(values)
+            kwargs['champions'].append(vals)
+        kwargs['champions'] = sorted(kwargs['champions'], key=itemgetter('total_played'), reverse=True) 
         return kwargs
     
     @http.route([
