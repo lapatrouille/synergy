@@ -101,12 +101,12 @@
 											        	<span t-esc="match.get('minionskilled')"/> CS
 											    	</td>
 										        	<td class="text-left">
-										        		<img class="img img-responsive" t-if="match.get('item0')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item0')}.png" width="30"/>
-									        			<img class="img img-responsive" t-if="match.get('item1')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item1')}.png" width="30"/>
-										        		<img class="img img-responsive" t-if="match.get('item2')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item2')}.png" width="30"/><br/>
-										        		<img class="img img-responsive" t-if="match.get('item3')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item3')}.png" width="30"/>
-									        			<img class="img img-responsive" t-if="match.get('item4')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item4')}.png" width="30"/>	
-										        		<img class="img img-responsive" t-if="match.get('item5')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item5')}.png" width="30"/>	
+										        		<img t-if="match.get('item0')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item0')}.png" width="30"/>
+									        			<img t-if="match.get('item1')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item1')}.png" width="30"/>
+										        		<img t-if="match.get('item2')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item2')}.png" width="30"/><br/>
+										        		<img t-if="match.get('item3')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item3')}.png" width="30"/>
+									        			<img t-if="match.get('item4')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item4')}.png" width="30"/>	
+										        		<img t-if="match.get('item5')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item5')}.png" width="30"/>	
 										        	</td>
 											    </tr>
 											  </tbody>
