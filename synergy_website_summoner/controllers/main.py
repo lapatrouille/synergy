@@ -49,7 +49,8 @@ summoner_fields = [
     'bro_participants',
     'champions',
     'roles',
-    'ranked_stats'
+    'ranked_stats',
+    'current_game'
     ]
 
 def urlEncodeNonAscii(b):
@@ -385,14 +386,74 @@ class summoner(http.Controller):
         kwargs['champions'] = sorted(kwargs['champions'], key=itemgetter('total_played'), reverse=True) 
         return kwargs
     
+    def get_current_game(self, kwargs, region):
+        champ_obj = request.registry['summoner.champions']
+        spell_obj = request.registry['summoner.spells']
+        summoner = kwargs['summoner']
+        try:
+            current_game_url = "https://" + region + ".api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/" + region.upper() + "1/" +  summoner.summoner_id + "?api_key=" + key
+            url = iriToUri(current_game_url)
+            result = urllib2.urlopen(url).read()
+            game = json.loads(result)
+            blue_side = []
+            blue_side_id = 0
+            red_side = []
+            red_side_id = 0
+            participants = game.get('participants')
+            for participant in participants:
+                if participant.get('spell1Id'):
+                    sepll1_ids = spell_obj.search(request.cr, 1, [('spell_id','=', int(participant.get('spell1Id')))], context=request.context)
+                    if sepll1_ids:
+                        spell1 = spell_obj.browse(request.cr, 1, sepll1_ids[0], context=request.context)
+                if participant.get('spell2Id'):
+                    sepll2_ids = spell_obj.search(request.cr, 1, [('spell_id','=', int(participant.get('spell2Id')))], context=request.context)
+                    if sepll2_ids:
+                        spell2 = spell_obj.browse(request.cr, 1, sepll2_ids[0], context=request.context)
+                champ_ids = champ_obj.search(request.cr, 1, [('champion_id','=', participant.get('championId'))], context=request.context)
+                if champ_ids:
+                    champ = champ_obj.browse(request.cr, 1, champ_ids[0], context=request.context)
+                    champion_key = champ.key
+                    champion_name = champ.name
+                    champion_title = champ.title
+                vals = {
+                    'name': participant.get('summonerName'),
+                    'icon_id': participant.get('profileIconId'),
+                    'spell1id': spell1.key,
+                    'spell2id': spell2.key,
+                    'champion_name': champion_name,
+                    'champion_key': champion_key,
+                    'champion_title': champion_title,
+                }
+                if participant.get('teamId') == 100:
+                    blue_side_id += 1
+                    vals.update({'participant_id': blue_side_id})
+                    blue_side.append(vals)
+                if participant.get('teamId') == 200:
+                    red_side_id += 1
+                    vals.update({'participant_id': red_side_id})
+                    red_side.append(vals)
+            vals = {
+                'blue_side': blue_side,
+                'red_side': red_side,
+            }
+            kwargs['current_game'] = vals
+        except:
+            kwargs['current_game'] = False
+        return kwargs
+    
     @http.route([
          '/summoner',
+         '/summoner/<region>/<name>',
      ], type='http', auth="public", website=True)
-    def summoner(self, name=None, **kwargs):
+    def summoner(self, name=None, region=None, **kwargs):
+        print name
+        print region
         values = {}
-        if kwargs:
-            name = kwargs.get('summoner_name')
-            region = kwargs.get('summoner_region')
+        if kwargs or (name and region):
+            if not name:
+                name = kwargs.get('summoner_name')
+            if not region:
+                region = kwargs.get('summoner_region')
             print "0", DT.now()
             kwargs = self.get_profile(name, region)
             print "1", DT.now()
@@ -408,6 +469,9 @@ class summoner(http.Controller):
             print "6", DT.now()
             kwargs = self.get_champions_stats(kwargs, region)
             print "7"
+            kwargs = self.get_current_game(kwargs, region)
+            print "8"
+        print kwargs
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)

@@ -6,7 +6,15 @@
 		      <div id="wrap">
 		        <div class="oe_structure"/>
 		        <div class="container">
-		            <form action="/summoner" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+		            <script>
+					function process()
+					{
+					var url="/summoner/" + document.getElementById("region").value + "/" + document.getElementById("name").value;
+					location.href=url;
+					return false;
+					}
+					</script>
+		        	<form onSubmit="return process();" class="form-horizontal mt32" enctype="multipart/form-data">
 		            	<section data-snippet-id='three-columns'>
 			                <div class="container">
 			                    <div class="row">
@@ -15,11 +23,11 @@
 			                        <div class="col-md-4">
 			                        	<div class="col-md-6">
 						                	<label class="control-label" for="summoner_name">Summoner Name :</label>
-						                    <input type="text" class="form-control" name="summoner_name" t-attf-value="#{summoner.summoner_name or ''}"/>
+						                    <input id="name" type="text" class="form-control" name="summoner_name" t-attf-value="#{summoner.summoner_name or ''}"/>
 			                        	</div>
 			                        	<div class="col-md-5">
 						                	<label class="control-label" for="summoner_region">Region :</label>
-						                    <select class="form-control" name="summoner_region" t-attf-value="#{summoner.region or ''}">
+						                    <select id="region" class="form-control" name="summoner_region" t-attf-value="#{summoner.region or ''}">
 												<option value="euw">EUW</option>
 												<option value="eune">EUNE</option>
 												<option value="na">NA</option>
@@ -50,12 +58,12 @@
 			                        <span t-esc="ranked_stats.get('league_name')"/><br/>
 			                        <span t-esc="ranked_stats.get('league_tier')"/> <span t-esc="ranked_stats.get('league_division')"/> <strong><span t-esc="ranked_stats.get('league_points')"/> LP</strong>
 		                        </div>
-		                        <div class="col-md-7" t-if="matches">
+		                        <div class="col-md-9" t-if="matches">
 		                        	<ul class="nav nav-tabs" role="tablist">
 									    <li class="active"><a data-toggle="pill" href="#matches">Matches</a></li>
 									    <li><a data-toggle="pill" href="#champions">Champions</a></li>
 									    <li><a data-toggle="pill" href="#">Bros</a></li>
-									    <!--<li><a href="#">About</a></li>-->     
+									    <li><a data-toggle="pill" href="#current_game">Current Game</a></li>   
 									</ul>
 									<div class="tab-content">
 			                        	<div id="matches" class="tab-pane fade in active">
@@ -154,6 +162,69 @@
 											  </tbody>
 											</table>
 										</div>
+										<div id="current_game" class="tab-pane fade">
+											<span t-if="not current_game" class="text-center">No Current Game</span>
+											<div class="row" t-if="current_game">
+												<div class="col-md-6">
+													<table class="table table-responsive">
+													  <thead>
+													    <tr>
+													    	<th class="text-left" colspan="4">Blue Side</th>
+													    </tr>
+													  </thead>
+													  <tbody>
+													    <tr t-foreach="current_game.get('blue_side')" t-as="participant" >
+													    	<td class="text-center" width="50">
+					                    						<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{participant.get('icon_id')}.png" width="40"/><br/>
+													    	</td>
+													    	<td class="text-left">
+													    		<i><a t-att-href="'/summoner/%s/%s' % (summoner.region, participant.get('name'))" t-esc="participant.get('name')"/></i><br/>
+													    		<!--<i><span t-esc="participant.get('name')"/></i><br/>-->
+													    		<strong><span t-esc="participant.get('champion_name')"/></strong><br/>
+										        				<!--<i><span t-esc="participant.get('champion_title')"/></i>-->
+													    	</td>
+													        <td class="text-center" width="50">
+										        				<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{participant.get('champion_key')}.png" width="40"/>
+															</td>
+													        <td class="text-center" width="40">
+												        		<img t-if="participant.get('spell1id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{participant.get('spell1id')}.png" width="20"/><br/>
+												        		<img t-if="participant.get('spell2id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{participant.get('spell2id')}.png" width="20"/>
+													        </td>
+													    </tr>
+													  </tbody>
+													</table>
+												</div>
+												<div class="col-md-6">
+													<table class="table table-responsive" t-if="current_game">
+													  <thead>
+													    <tr>
+													    	<th class="text-right" colspan="4">Red Side</th>
+													    </tr>
+													  </thead>
+													  <tbody>
+													    <tr t-foreach="current_game.get('red_side')" t-as="participant" >
+													        <td class="text-center" width="40">
+												        		<img t-if="participant.get('spell1id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{participant.get('spell1id')}.png" width="20"/><br/>
+												        		<img t-if="participant.get('spell2id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{participant.get('spell2id')}.png" width="20"/>
+													        </td>
+													        <td class="text-center" width="50">
+										        				<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{participant.get('champion_key')}.png" width="40"/>
+															</td>
+													        <td class="text-left">
+													    		<i><a t-att-href="'/summoner/%s/%s' % (summoner.region, participant.get('name'))" t-esc="participant.get('name')"/></i><br/>
+													    		<!--<i><span t-esc="participant.get('name')"/></i><br/>-->
+													    		<strong><span t-esc="participant.get('champion_name')"/></strong><br/>
+										        				<!--<i><span t-esc="participant.get('champion_title')"/></i>-->
+													    	</td>
+													        <td class="text-center" width="50">
+					                    						<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{participant.get('icon_id')}.png" width="40"/><br/>
+													    	</td>
+													    </tr>
+													  </tbody>
+													</table>
+												</div>
+											</div>
+										</div>
 									</div>
 		                        </div>
 		                    </div>
@@ -183,7 +254,15 @@
 		    <xpath expr="//div" position="inside">
 		    	<div class="oe_structure"/>
 		        <div class="container">
-		        	<form action="/summoner" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+		        	<script>
+					function process()
+					{
+					var url="/summoner/" + document.getElementById("region").value + "/" + document.getElementById("name").value;
+					location.href=url;
+					return false;
+					}
+					</script>
+		        	<form onSubmit="return process();" class="form-horizontal mt32" enctype="multipart/form-data">
 		            	<section data-snippet-id='three-columns'>
 			                <div class="container">
 			                    <div class="row">
@@ -192,11 +271,11 @@
 			                        <div class="col-md-4">
 			                        	<div class="col-md-6">
 						                	<label class="control-label" for="summoner_name">Summoner Name :</label>
-						                    <input type="text" class="form-control" name="summoner_name" t-attf-value="#{summoner_name or ''}"/>
+						                    <input id="name" type="text" class="form-control" name="summoner_name" t-attf-value="#{summoner_name or ''}"/>
 			                        	</div>
 			                        	<div class="col-md-5">
 						                	<label class="control-label" for="summoner_region">Region :</label>
-						                    <select class="form-control" name="summoner_region" t-attf-value="#{summoner_region or ''}">
+						                    <select id="region" class="form-control" name="summoner_region" t-attf-value="#{summoner_region or ''}">
 												<option value="euw">EUW</option>
 												<option value="eune">EUNE</option>
 												<option value="na">NA</option>
