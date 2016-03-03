@@ -125,6 +125,7 @@
 											  <thead>
 											    <tr>
 											    	<th class="text-left" colspan="2">Champion</th>
+											    	<th class="text-center">Game Played (%)</th>
 											        <th class="text-center">Win Rate</th>
 											        <th class="text-center" colspan="2">KDA</th>
 											        <th class="text-center">Gold</th>
@@ -139,6 +140,9 @@
 								        				<strong><span t-esc="champion.get('champion_name')"/></strong><br/>
 								        				<i><span t-esc="champion.get('champion_title')"/></i>
 													</td>
+													<td class="text-center">
+										        		<strong><span t-esc="champion.get('gp_pct')"/> %</strong>
+										        	</td>
 													<td class="text-center">
 											        	<strong>P </strong> <span t-esc="champion.get('total_played')"/> ( <span t-esc="champion.get('total_winrate')"/> %)<br/>
 			                        					<strong>W </strong><span t-esc="champion.get('total_won')"/> / <strong>L </strong><span t-esc="champion.get('total_lost')"/><br/>

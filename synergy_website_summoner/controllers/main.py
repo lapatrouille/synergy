@@ -320,6 +320,8 @@ class summoner(http.Controller):
     def get_champions_stats(self, kwargs, region):
         champ_obj = request.registry['summoner.champions']
         summoner = kwargs['summoner']
+        ranked_stats = kwargs['ranked_stats']
+        ranked_played = ranked_stats.get('total_played')
         stats_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/stats/by-summoner/" +  summoner.summoner_id + "/ranked?season=SEASON2016&api_key=" + key
         stats = GetJson(stats_url)
         kwargs['champions'] = []
@@ -328,8 +330,6 @@ class summoner(http.Controller):
             if champion.get('id') == 0:
                 continue
             stats = champion.get('stats')
-            if champion.get('id') == 68:
-                print stats
             total_won = int(stats.get('totalSessionsWon'))
             total_lost = int(stats.get('totalSessionsLost'))
             total_played = int(stats.get('totalSessionsPlayed'))
@@ -349,6 +349,8 @@ class summoner(http.Controller):
             assists = float("{0:.2f}".format(assists))
             gold_earned = float(total_gold_earned) / float(total_played)
             gold_earned = float("{0:.2f}".format(gold_earned))
+            gp_pct = float(total_played) / float(ranked_played) *100
+            gp_pct = float("{0:.2f}".format(gp_pct))
             if deaths == 0:
                 kda = "Perfect"
             else:
@@ -369,6 +371,7 @@ class summoner(http.Controller):
                 'gold_earned': gold_earned,
                 'kda': kda,
                 'fb_pct': fb_pct,
+                'gp_pct': gp_pct,
             }
             champ_ids = champ_obj.search(request.cr, 1, [('champion_id','=', int(champion.get('id')))], context=request.context)
             if champ_ids:
@@ -446,8 +449,6 @@ class summoner(http.Controller):
          '/summoner/<region>/<name>',
      ], type='http', auth="public", website=True)
     def summoner(self, name=None, region=None, **kwargs):
-        print name
-        print region
         values = {}
         if kwargs or (name and region):
             if not name:
@@ -471,7 +472,6 @@ class summoner(http.Controller):
             print "7"
             kwargs = self.get_current_game(kwargs, region)
             print "8"
-        print kwargs
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)
