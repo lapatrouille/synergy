@@ -123,7 +123,7 @@ class summoner(http.Controller):
     
     def get_matches(self, kwargs, region):
         summoner = kwargs['summoner']
-        matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  summoner.summoner_id + "?api_key=" + key + "&rankedQueues=RANKED_FLEX_SR"
+        matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  summoner.summoner_id + "?api_key=" + key + "&rankedQueues=RANKED_FLEX_SR,RANKED_SOLO_5x5"
 #         if kwargs.get('old_revision_date'):
 #             begin_time = DtToTs(kwargs['old_revision_date'])
 #             matches_url = matches_url + "&beginTime=" + begin_time
