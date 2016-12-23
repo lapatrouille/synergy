@@ -98,25 +98,27 @@ class summoner_updates(models.TransientModel):
         champ_obj = self.env['summoner.champions']
         for champ in champion_dict.items():
             champ = champ[1]
-            vals = {
-                'champion_id': champ.get('id'),
-                'title': champ.get('title'),
-                'key': champ.get('key'),
-                'name': champ.get('name'),
-            }
-            champ_obj.create(vals)
+            if not champ_obj.search([('champion_id','=', champ.get('id'))]):
+                vals = {
+                    'champion_id': champ.get('id'),
+                    'title': champ.get('title'),
+                    'key': champ.get('key'),
+                    'name': champ.get('name'),
+                }
+                champ_obj.create(vals)
         spell_list_by_id_url = "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/summoner-spell?dataById=True&api_key=" + key
         result_spell = GetJson(spell_list_by_id_url)
         spell_dict = result_spell['data']
         spell_obj = self.env['summoner.spells']
         for spell in spell_dict.items():
             spell = spell[1]
-            vals = {
-                'spell_id': spell.get('id'),
-                'key': spell.get('key'),
-                'name': spell.get('name'),
-            }
-            spell_obj.create(vals)
+            if not spell_obj.search([('spell_id','=', spell.get('id'))]):
+                vals = {
+                    'spell_id': spell.get('id'),
+                    'key': spell.get('key'),
+                    'name': spell.get('name'),
+                }
+                spell_obj.create(vals)
         return True
     
 class summoner_matches(models.Model):

@@ -122,9 +122,8 @@ class summoner(http.Controller):
         return kwargs
     
     def get_matches(self, kwargs, region):
-        match_obj = request.registry['summoner.matches']
         summoner = kwargs['summoner']
-        matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  summoner.summoner_id + "?api_key=" + key + "&rankedQueues=TEAM_BUILDER_DRAFT_RANKED_5x5"
+        matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  summoner.summoner_id + "?api_key=" + key + "&rankedQueues=RANKED_FLEX_SR"
 #         if kwargs.get('old_revision_date'):
 #             begin_time = DtToTs(kwargs['old_revision_date'])
 #             matches_url = matches_url + "&beginTime=" + begin_time
@@ -322,7 +321,7 @@ class summoner(http.Controller):
         summoner = kwargs['summoner']
         ranked_stats = kwargs['ranked_stats']
         ranked_played = ranked_stats.get('total_played')
-        stats_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/stats/by-summoner/" +  summoner.summoner_id + "/ranked?season=SEASON2016&api_key=" + key
+        stats_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/stats/by-summoner/" +  summoner.summoner_id + "/ranked?season=SEASON2017&api_key=" + key
         stats = GetJson(stats_url)
         kwargs['champions'] = []
         champions = stats.get('champions')
@@ -455,23 +454,14 @@ class summoner(http.Controller):
                 name = kwargs.get('summoner_name')
             if not region:
                 region = kwargs.get('summoner_region')
-            print "0", DT.now()
             kwargs = self.get_profile(name, region)
-            print "1", DT.now()
             kwargs = self.get_matches(kwargs, region)
-            print "2", DT.now()
             kwargs = self.get_champion_details(kwargs, region)
-            print "3", DT.now()
             kwargs = self.get_match_details(kwargs, region)
-            print "4", DT.now()
             kwargs = self.complete_matches(kwargs)
-            print "5", DT.now()
             kwargs = self.get_ranked_stats(kwargs, region)
-            print "6", DT.now()
             kwargs = self.get_champions_stats(kwargs, region)
-            print "7"
             kwargs = self.get_current_game(kwargs, region)
-            print "8"
         for field in summoner_fields:
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)
