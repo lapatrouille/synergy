@@ -48,7 +48,7 @@
 		                    <div class="row">
 		                    	<div class="col-md-3" t-if="summoner">
 		                    		<h1><span t-esc="summoner.summoner_name"/></h1>
-			                    	<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{summoner.profile_icon_id}.png" t-if="summoner.profile_icon_id"/><br/>
+			                    	<img class="img shadow img-rounded" t-attf-src="http://sk2.op.gg/images/profile_icons//profileIcon#{summoner.profile_icon_id}.jpg" t-if="summoner.profile_icon_id"/><br/>
 			                        <br/><strong>Level</strong> <span t-esc="summoner.summoner_level"/> / <strong>Server</strong> <span t-esc="summoner.region"/><br/>
 			                        <strong>Last Update:</strong> <span t-esc="summoner.revision_date"/><br/>
 			                        <strong>Id:</strong> <span t-esc="summoner.summoner_id"/><br/>
