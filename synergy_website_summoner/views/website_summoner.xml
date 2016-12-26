@@ -48,15 +48,78 @@
 		                    <div class="row">
 		                    	<div class="col-md-3" t-if="summoner">
 		                    		<h1><span t-esc="summoner.summoner_name"/></h1>
-			                    	<img class="img shadow img-rounded" t-attf-src="http://sk2.op.gg/images/profile_icons//profileIcon#{summoner.profile_icon_id}.jpg" t-if="summoner.profile_icon_id"/><br/>
-			                        <br/><strong>Level</strong> <span t-esc="summoner.summoner_level"/> / <strong>Server</strong> <span t-esc="summoner.region"/><br/>
-			                        <strong>Last Update:</strong> <span t-esc="summoner.revision_date"/><br/>
-			                        <strong>Id:</strong> <span t-esc="summoner.summoner_id"/><br/>
-			                        <strong>Total Played:</strong> <span t-esc="ranked_stats.get('total_played')"/> ( <span t-esc="ranked_stats.get('total_winrate')"/> %)<br/>
-			                        <strong>W </strong><span t-esc="ranked_stats.get('total_won')"/> / <strong>L </strong><span t-esc="ranked_stats.get('total_lost')"/><br/>
-			                        <h3>League Details:</h3>
-			                        <span t-esc="ranked_stats.get('league_name')"/><br/>
-			                        <span t-esc="ranked_stats.get('league_tier')"/> <span t-esc="ranked_stats.get('league_division')"/> <strong><span t-esc="ranked_stats.get('league_points')"/> LP</strong>
+		                    		<table class="table table-responsive">
+			                    		<thead>
+										    <tr>
+										        <th></th>
+										        <th></th>
+										    </tr>
+										  </thead>
+										  <tbody>
+									  		<tr>
+									  			<td>
+									  				<img class="img shadow img-rounded" t-attf-src="http://sk2.op.gg/images/profile_icons/profileIcon#{summoner.profile_icon_id}.jpg" t-if="summoner.profile_icon_id"/><br/>
+									  			</td>
+									  			<td>
+									  				<strong>Level</strong> <span t-esc="summoner.summoner_level"/><br/>
+									  				<strong>Played</strong> <span t-esc="ranked_stats.get('total_played')"/><br/>
+			                        				<strong>W </strong><span t-esc="ranked_stats.get('total_won')"/> / <strong>L </strong><span t-esc="ranked_stats.get('total_lost')"/><br/>
+			                        				<strong>Ratio </strong><span t-esc="ranked_stats.get('total_winrate')"/> %
+									  			</td>
+									  		</tr>
+										  </tbody>
+									  </table>
+			                        <!--<strong>Last Update:</strong> <span t-esc="summoner.revision_date"/><br/>
+			                        <strong>Id:</strong> <span t-esc="summoner.summoner_id"/><br/>-->
+			                        <!--<h3>League Details:</h3>-->
+			                        <strong><i>Solo Q</i></strong><br/>
+			                        <table class="table table-responsive">
+			                    		<thead>
+										    <tr>
+										        <th></th>
+										        <th></th>
+										    </tr>
+										  </thead>
+										  <tbody>
+										  	<tr>
+									  			<td>
+									  				<img width="128" class="img shadow img-rounded" t-attf-src="http://sk2.op.gg/images/medals/#{ranked_stats.get('league_icon_sq')}.png" t-if="summoner.profile_icon_id"/><br/>
+									  			</td>
+									  			<td>
+									  				<strong><span t-esc="ranked_stats.get('league_tier_sq')"/> <span t-esc="ranked_stats.get('league_division_sq')"/></strong><br/>
+									  				<span t-esc="ranked_stats.get('league_points_sq')"/> <strong>LP</strong><br/>
+							                        <i><span t-esc="ranked_stats.get('league_name_sq')"/></i><br/>
+							                        <strong>Played</strong> <span t-esc="ranked_stats.get('total_played_sq')"/><br/>
+							                        <strong>W </strong><span t-esc="ranked_stats.get('total_won_sq')"/> / <strong>L </strong><span t-esc="ranked_stats.get('total_lost_sq')"/><br/>
+							                        <strong>Ratio </strong><span t-esc="ranked_stats.get('total_winrate_sq')"/> %
+									  			</td>
+									  		</tr>
+									 	</tbody>
+								    </table>
+			                        <strong><i>Flex</i></strong><br/>
+			                        <table class="table table-responsive">
+			                    		<thead>
+										    <tr>
+										        <th></th>
+										        <th></th>
+										    </tr>
+										  </thead>
+										  <tbody>
+										  	<tr>
+									  			<td>
+									  				<img width="128" class="img shadow img-rounded" t-attf-src="http://sk2.op.gg/images/medals/#{ranked_stats.get('league_icon_flex')}.png" t-if="summoner.profile_icon_id"/><br/>
+									  			</td>
+									  			<td>
+									  				<strong><span t-esc="ranked_stats.get('league_tier_flex')"/> <span t-esc="ranked_stats.get('league_division_flex')"/> </strong><br/>
+									  				<span t-esc="ranked_stats.get('league_points_flex')"/><strong> LP</strong><br/>
+							                        <i><span t-esc="ranked_stats.get('league_name_flex')"/></i><br/>
+							                        <strong>Played</strong> <span t-esc="ranked_stats.get('total_played_flex')"/><br/>
+							                        <strong>W </strong><span t-esc="ranked_stats.get('total_won_flex')"/> / <strong>L </strong><span t-esc="ranked_stats.get('total_lost_flex')"/><br/>
+							                        <strong>Ratio </strong><span t-esc="ranked_stats.get('total_winrate_flex')"/> %
+									  			</td>
+									  		</tr>
+									 	</tbody>
+								    </table>
 		                        </div>
 		                        <div class="col-md-9" t-if="matches">
 		                        	<ul class="nav nav-tabs" role="tablist">
@@ -109,12 +172,12 @@
 											        	<span t-esc="match.get('minionskilled')"/> CS
 											    	</td>
 										        	<td class="text-left">
-										        		<img t-if="match.get('item0')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item0')}.png" width="30"/>
-									        			<img t-if="match.get('item1')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item1')}.png" width="30"/>
-										        		<img t-if="match.get('item2')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item2')}.png" width="30"/><br/>
-										        		<img t-if="match.get('item3')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item3')}.png" width="30"/>
-									        			<img t-if="match.get('item4')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item4')}.png" width="30"/>	
-										        		<img t-if="match.get('item5')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/item/#{match.get('item5')}.png" width="30"/>	
+										        		<img t-if="match.get('item0')" t-attf-src="http://sk2.op.gg/images/lol/item/#{match.get('item0')}.png" width="30"/>
+									        			<img t-if="match.get('item1')" t-attf-src="http://sk2.op.gg/images/lol/item/#{match.get('item1')}.png" width="30"/>
+										        		<img t-if="match.get('item2')" t-attf-src="http://sk2.op.gg/images/lol/item/#{match.get('item2')}.png" width="30"/><br/>
+										        		<img t-if="match.get('item3')" t-attf-src="http://sk2.op.gg/images/lol/item/#{match.get('item3')}.png" width="30"/>
+									        			<img t-if="match.get('item4')" t-attf-src="http://sk2.op.gg/images/lol/item/#{match.get('item4')}.png" width="30"/>	
+										        		<img t-if="match.get('item5')" t-attf-src="http://sk2.op.gg/images/lol/item/#{match.get('item5')}.png" width="30"/>	
 										        	</td>
 											    </tr>
 											  </tbody>
@@ -221,7 +284,7 @@
 										        				<!--<i><span t-esc="participant.get('champion_title')"/></i>-->
 													    	</td>
 													        <td class="text-center" width="50">
-					                    						<img class="img shadow img-rounded" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/#{participant.get('icon_id')}.png" width="40"/><br/>
+					                    						<img class="img shadow img-rounded" t-attf-src="http://sk2.op.gg/images/profile_icons/profileIcon#{participant.get('icon_id')}.png" width="40"/><br/>
 													    	</td>
 													    </tr>
 													  </tbody>

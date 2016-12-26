@@ -123,7 +123,7 @@ class summoner(http.Controller):
     
     def get_matches(self, kwargs, region):
         summoner = kwargs['summoner']
-        matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  summoner.summoner_id + "?api_key=" + key + "&rankedQueues=RANKED_FLEX_SR,RANKED_SOLO_5x5"
+        matches_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" +  summoner.summoner_id + "?api_key=" + key + "&rankedQueues=RANKED_FLEX_SR,TEAM_BUILDER_RANKED_SOLO"
 #         if kwargs.get('old_revision_date'):
 #             begin_time = DtToTs(kwargs['old_revision_date'])
 #             matches_url = matches_url + "&beginTime=" + begin_time
@@ -296,23 +296,46 @@ class summoner(http.Controller):
         ranked_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.5/league/by-summoner/" +  summoner.summoner_id + "/entry?api_key=" + key
         ranked_stats = GetJson(ranked_url)
         kwargs['ranked_stats'] = {}
-        ranked_stats =  ranked_stats[str(summoner.summoner_id)][0]
-        entry = ranked_stats.get('entries')[0]
-        total_won = int(entry.get('wins'))
-        total_lost = int(entry.get('losses'))
-        total_played = total_won + total_lost
-        total_winrate = (float(total_won) / float(total_played)) * 100
+        vals = {}
+        div = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5}
+        for entry in ranked_stats[str(summoner.summoner_id)]:
+            entries = entry['entries'][0]
+            if entry['queue'] == 'RANKED_SOLO_5x5':
+                total_won = int(entries.get('wins'))
+                total_lost = int(entries.get('losses'))
+                total_played = total_won + total_lost
+                total_winrate = (float(total_won) / float(total_played)) * 100
+                total_winrate = float("{0:.2f}".format(total_winrate))
+                vals['total_played_sq'] = total_played
+                vals['total_won_sq'] =  total_won
+                vals['total_lost_sq'] = total_lost
+                vals['total_winrate_sq'] = total_winrate
+                vals['league_name_sq'] = entry.get('name')
+                vals['league_tier_sq'] = entry.get('tier')
+                vals['league_division_sq'] = entries.get('division')
+                vals['league_points_sq'] = entries.get('leaguePoints')
+                vals['league_icon_sq'] = entry.get('tier').lower() + '_' + str(div[entries.get('division')])
+            if entry['queue'] == 'RANKED_FLEX_SR':
+                total_won = int(entries.get('wins'))
+                total_lost = int(entries.get('losses'))
+                total_played = total_won + total_lost
+                total_winrate = (float(total_won) / float(total_played)) * 100
+                total_winrate = float("{0:.2f}".format(total_winrate))
+                vals['total_played_flex'] = total_played
+                vals['total_won_flex'] =  total_won
+                vals['total_lost_flex'] = total_lost
+                vals['total_winrate_flex'] = total_winrate
+                vals['league_name_flex'] = entry.get('name')
+                vals['league_tier_flex'] = entry.get('tier')
+                vals['league_division_flex'] = entries.get('division')
+                vals['league_points_flex'] = entries.get('leaguePoints')
+                vals['league_icon_flex'] = entry.get('tier').lower() + '_' + str(div[entries.get('division')])
+        vals['total_played'] = vals['total_played_sq'] + vals['total_played_flex']
+        vals['total_won'] = vals['total_won_sq'] + vals['total_won_flex']
+        vals['total_lost'] = vals['total_lost_sq'] + vals['total_lost_flex']
+        total_winrate = (float(vals['total_won']) / float(vals['total_played'])) * 100
         total_winrate = float("{0:.2f}".format(total_winrate))
-        vals = {
-            'total_played': total_played,
-            'total_won':  total_won,
-            'total_lost': total_lost,
-            'total_winrate': total_winrate,
-            'league_name': ranked_stats.get('name'),
-            'league_tier': ranked_stats.get('tier'),
-            'league_division': entry.get('division'),
-            'league_points': entry.get('leaguePoints'),
-        }
+        vals['total_winrate'] = total_winrate
         kwargs['ranked_stats'] = vals
         return kwargs
     
