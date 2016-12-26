@@ -309,6 +309,9 @@ class summoner(http.Controller):
         div = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5}
         for entry in ranked_stats[str(summoner.summoner_id)]:
             entries = entry['entries'][0]
+            vals['total_played'] = 0
+            vals['total_won'] = 0
+            vals['total_lost'] = 0
             if entry['queue'] == 'RANKED_SOLO_5x5':
                 total_won = int(entries.get('wins'))
                 total_lost = int(entries.get('losses'))
@@ -316,8 +319,11 @@ class summoner(http.Controller):
                 total_winrate = (float(total_won) / float(total_played)) * 100
                 total_winrate = float("{0:.2f}".format(total_winrate))
                 vals['total_played_sq'] = total_played
-                vals['total_won_sq'] =  total_won
+                vals['total_played'] += total_played
+                vals['total_won_sq'] = total_won
+                vals['total_won'] += total_won
                 vals['total_lost_sq'] = total_lost
+                vals['total_lost'] += total_lost
                 vals['total_winrate_sq'] = total_winrate
                 vals['league_name_sq'] = entry.get('name')
                 vals['league_tier_sq'] = entry.get('tier')
@@ -331,17 +337,17 @@ class summoner(http.Controller):
                 total_winrate = (float(total_won) / float(total_played)) * 100
                 total_winrate = float("{0:.2f}".format(total_winrate))
                 vals['total_played_flex'] = total_played
-                vals['total_won_flex'] =  total_won
+                vals['total_played'] += total_played
+                vals['total_won_flex'] = total_won
+                vals['total_won'] += total_won
                 vals['total_lost_flex'] = total_lost
+                vals['total_lost'] += total_lost
                 vals['total_winrate_flex'] = total_winrate
                 vals['league_name_flex'] = entry.get('name')
                 vals['league_tier_flex'] = entry.get('tier')
                 vals['league_division_flex'] = entries.get('division')
                 vals['league_points_flex'] = entries.get('leaguePoints')
                 vals['league_icon_flex'] = entry.get('tier').lower() + '_' + str(div[entries.get('division')])
-        vals['total_played'] = vals['total_played_sq'] + vals['total_played_flex']
-        vals['total_won'] = vals['total_won_sq'] + vals['total_won_flex']
-        vals['total_lost'] = vals['total_lost_sq'] + vals['total_lost_flex']
         total_winrate = (float(vals['total_won']) / float(vals['total_played'])) * 100
         total_winrate = float("{0:.2f}".format(total_winrate))
         vals['total_winrate'] = total_winrate

@@ -72,8 +72,8 @@
 			                        <!--<strong>Last Update:</strong> <span t-esc="summoner.revision_date"/><br/>
 			                        <strong>Id:</strong> <span t-esc="summoner.summoner_id"/><br/>-->
 			                        <!--<h3>League Details:</h3>-->
-			                        <strong><i>Solo Q</i></strong><br/>
-			                        <table class="table table-responsive">
+			                        <strong t-if="ranked_stats.get('total_played_sq')"><i>Solo Q</i></strong>
+			                        <table class="table table-responsive" t-if="ranked_stats.get('total_played_sq')">
 			                    		<thead>
 										    <tr>
 										        <th></th>
@@ -96,8 +96,8 @@
 									  		</tr>
 									 	</tbody>
 								    </table>
-			                        <strong><i>Flex</i></strong><br/>
-			                        <table class="table table-responsive">
+			                        <strong t-if="ranked_stats.get('total_played_flex')"><i>Flex</i></strong>
+			                        <table class="table table-responsive" t-if="ranked_stats.get('total_played_flex')">
 			                    		<thead>
 										    <tr>
 										        <th></th>
