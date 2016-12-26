@@ -135,6 +135,7 @@
 											    <tr>
 											    	<th width="80"></th>
 											        <th width="40"></th>
+											        <th width="40"></th>
 											        <th></th>
 											        <th></th>
 											        <th></th>
@@ -144,8 +145,8 @@
 											  </thead>
 											  <tbody>
 											    <tr t-foreach="matches" t-as="match" >
-											    	<tr class="spacer" style="background-color: #151E2A" t-if="match.get('loose')"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-											  		<tr class="spacer" style="background-color: #8EBC6F" t-if="match.get('win')"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+											    	<tr class="spacer" style="background-color: #151E2A" t-if="match.get('loose')"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+											  		<tr class="spacer" style="background-color: #8EBC6F" t-if="match.get('win')"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 											        <td class="text-center" t-if="match.get('loose')" style="background-image: url('synergy_website_summoner/static/img/loose2.jpg'); background-size: 80px 80px;">
 								        				<img class="img img-circle img-center" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/champion/#{match.get('champion_key')}.png" width="60"/>
 													</td>
@@ -155,6 +156,9 @@
 											        <td class="text-center" >
 										        		<img t-if="match.get('spell1id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{match.get('spell1id')}.png" width="30"/><br/>
 										        		<img t-if="match.get('spell2id')" t-attf-src="http://ddragon.leagueoflegends.com/cdn/6.3.1/img/spell/#{match.get('spell2id')}.png" width="30"/>
+											        </td>
+											        <td class="text-center" style="vertical-align: middle">
+											        	<img t-if="match.get('mastery_id')" t-attf-src="http://sk2.op.gg/images/lol/mastery/#{match.get('mastery_id')}.png" width="30"/><br/>
 											        </td>
 											        <td class="text-center">
 										        		<strong><span t-esc="match.get('official_role')"/><br/></strong>

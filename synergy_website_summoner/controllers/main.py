@@ -166,11 +166,11 @@ class summoner(http.Controller):
             elif match.get('lane') == 'TOP':
                 official_role = 'TOP'
             elif match.get('lane') == 'JUNGLE':
-                official_role = 'JNG'
+                official_role = 'JUNGLE'
             elif match.get('lane') == 'BOTTOM':
                 official_role = 'BOT'
                 if match.get('role') == 'DUO_SUPPORT':
-                    official_role = 'SUP'
+                    official_role = 'SUPPORT'
                 elif match.get('role') == 'DUO_CARRY':
                     official_role = 'ADC'
             match['official_role'] = official_role
@@ -185,6 +185,7 @@ class summoner(http.Controller):
             match_id = match.get('match_id')
             i += 1
             match_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/" + str(match_id) + "?api_key=" + key
+            time.sleep(1)
             result_match = GetJson(match_url)
             match_creation = TsToDt(result_match.get('matchCreation'))
             match_duration = str(timedelta(seconds=result_match.get('matchDuration')))
@@ -210,6 +211,7 @@ class summoner(http.Controller):
                     'championid': participant.get('championId'),
                     'teamid': participant.get('teamId'),
                     'highestachievedseasontier': participant.get('highestAchievedSeasonTier'),
+                    'masteries': participant.get('masteries'),
                 }
                 participants.append(vals)
                 stats = participant.get('stats')
@@ -269,6 +271,11 @@ class summoner(http.Controller):
                         sepll2_ids = spell_obj.search(request.cr, 1, [('spell_id','=', int(participant.get('spell2id')))], context=request.context)
                         if sepll2_ids:
                             spell2 = spell_obj.browse(request.cr, 1, sepll2_ids[0], context=request.context)
+                    mastery_id = 0
+                    if participant.get('masteries'):
+                        for mastery in participant['masteries']:
+                            if mastery.get('masteryId') in [6161,6162,6164,6261,6262,6263,6361,6362,6363]:
+                                mastery_id = mastery.get('masteryId')
                     vals = {
                         'kills': kills,
                         'deaths': deaths,
@@ -288,6 +295,8 @@ class summoner(http.Controller):
                         'spell1id': spell1.key,
                         'spell2id': spell2.key,
                     }
+                    if mastery_id != 0:
+                        vals['mastery_id'] = mastery_id
                     match.update(vals)
         return kwargs
     
