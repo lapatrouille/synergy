@@ -37,6 +37,7 @@ import json
 import time
 from operator import itemgetter
 import re, urlparse
+import unicodedata
 
 key = u"74537082-db44-4916-9ca3-09f8f8b7638e"
 
@@ -161,6 +162,10 @@ class summoner(http.Controller):
                     'champion_key': champion_key,
                         }
                 match.update(vals)
+            if match.get('queue') == 'TEAM_BUILDER_RANKED_SOLO':
+                game_type = "Solo Q"
+            elif match.get('queue') == 'RANKED_FLEX_SR':
+                game_type = "Flex"
             if match.get('lane') == 'MID':
                 official_role = 'MID'
             elif match.get('lane') == 'TOP':
@@ -174,6 +179,7 @@ class summoner(http.Controller):
                 elif match.get('role') == 'DUO_CARRY':
                     official_role = 'ADC'
             match['official_role'] = official_role
+            match['game_type'] = game_type
         return kwargs
 
     def get_match_details(self, kwargs, region):

@@ -161,9 +161,9 @@
 											        	<img t-if="match.get('mastery_id')" t-attf-src="http://sk2.op.gg/images/lol/mastery/#{match.get('mastery_id')}.png" width="30"/><br/>
 											        </td>
 											        <td class="text-center">
-										        		<strong><span t-esc="match.get('official_role')"/><br/></strong>
-										        		<br/>
-										        		<span t-esc="match.get('champion_name')"/>
+										        		<strong><span t-esc="match.get('official_role')"/></strong><br/>
+										        		<span t-esc="match.get('champion_name')"/><br/>
+										        		<strong><i><span t-esc="match.get('game_type')"/></i></strong>
 											        </td>
 											        <td class="text-center">
 											        	<span t-esc="match.get('kills')"/> / <span style="color: #B40404" t-esc="match.get('deaths')"/> / <span style="color: #01DF3A" t-esc="match.get('assists')"/><br/>
