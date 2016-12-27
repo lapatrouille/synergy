@@ -191,7 +191,7 @@ class summoner(http.Controller):
             match_id = match.get('match_id')
             i += 1
             match_url = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/" + str(match_id) + "?api_key=" + key
-            time.sleep(1)
+            time.sleep(2)
             result_match = GetJson(match_url)
             match_creation = TsToDt(result_match.get('matchCreation'))
             match_duration = str(timedelta(seconds=result_match.get('matchDuration')))
@@ -312,12 +312,12 @@ class summoner(http.Controller):
         ranked_stats = GetJson(ranked_url)
         kwargs['ranked_stats'] = {}
         vals = {}
+        vals['total_played'] = 0
+        vals['total_won'] = 0
+        vals['total_lost'] = 0
         div = {'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5}
         for entry in ranked_stats[str(summoner.summoner_id)]:
             entries = entry['entries'][0]
-            vals['total_played'] = 0
-            vals['total_won'] = 0
-            vals['total_lost'] = 0
             if entry['queue'] == 'RANKED_SOLO_5x5':
                 total_won = int(entries.get('wins'))
                 total_lost = int(entries.get('losses'))
